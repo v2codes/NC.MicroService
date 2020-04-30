@@ -12,6 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NC.Microservice.Infrastructure.Consul;
 using NC.MicroService.TeamService.EntityFrameworkCore;
 using NC.MicroService.TeamService.Repositories;
 using NC.MicroService.TeamService.Services;
@@ -41,6 +42,12 @@ namespace NC.MicroService.TeamService
             // 3. 注册团队仓储
             services.AddScoped<ITeamRepository, TeamRepository>();
 
+            // 4. 注册映射
+            // services.AddAutoMapper();
+
+            // 5. 注册Consul注册服务
+            services.AddConsulRegisry(Configuration);
+
             services.AddControllers();
         }
 
@@ -54,36 +61,8 @@ namespace NC.MicroService.TeamService
 
             app.UseHttpsRedirection();
 
-            // 注册Consul
-            // 1. 创建consul客户端连接
-            var consulClient = new ConsulClient(config =>
-            {
-                // 建立客户端和服务端连接
-                config.Address = new Uri("https://127.0.0.1:8500");
-            });
-
-            // 2. 创建consul服务注册对象
-            var registration = new AgentServiceRegistration()
-            {
-                ID = Guid.NewGuid().ToString(),
-                Name = "teamservice",
-                Address = "https://localhost",
-                Port = 5004,
-                Check = new AgentServiceCheck
-                {
-                    // 3.1、consul健康检查超时间
-                    Timeout = TimeSpan.FromSeconds(10),
-                    // 3.2、服务停止5秒后注销服务
-                    DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(5),
-                    // 3.3、consul健康检查地址
-                    HTTP = "https://localhost:5004/HealthCheck",
-                    // 3.4 consul健康检查间隔时间
-                    Interval = TimeSpan.FromSeconds(3),
-                }
-            };
-
-            // 3. 注册服务
-            consulClient.Agent.ServiceRegister(registration).Wait();
+            // 添加 consul注册 中间件
+            app.UseConsulRegistry();
 
             app.UseRouting();
 

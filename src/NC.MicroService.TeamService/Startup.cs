@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NC.Microservice.Infrastructure.Consul;
+using NC.MicroService.Infrastructure.Consul;
 using NC.MicroService.TeamService.EntityFrameworkCore;
 using NC.MicroService.TeamService.Repositories;
 using NC.MicroService.TeamService.Services;

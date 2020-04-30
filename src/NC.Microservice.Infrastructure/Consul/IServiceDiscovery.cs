@@ -1,10 +1,10 @@
-﻿using NC.Microservice.Infrastructure.Domain;
+﻿using NC.MicroService.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NC.Microservice.Infrastructure.Consul
+namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
     /// 服务发现抽象接口

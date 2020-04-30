@@ -1,4 +1,4 @@
-﻿using NC.Microservice.Infrastructure.Culster;
+﻿using NC.MicroService.Infrastructure.Culster;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NC.Microservice.Infrastructure.Consul
+namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
     /// Consul HTTPClient扩展

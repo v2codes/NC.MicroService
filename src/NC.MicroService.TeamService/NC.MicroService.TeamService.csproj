@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\NC.MicroService.EntityFrameworkCore\NC.MicroService.EntityFrameworkCore.csproj" />
-    <ProjectReference Include="..\NC.Microservice.Infrastructure\NC.Microservice.Infrastructure.csproj" />
+    <ProjectReference Include="..\NC.MicroService.Infrastructure\NC.MicroService.Infrastructure.csproj" />
   </ItemGroup>
 
 

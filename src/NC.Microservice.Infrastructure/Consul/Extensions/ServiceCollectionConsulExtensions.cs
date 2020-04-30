@@ -1,11 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NC.Microservice.Infrastructure.Domain;
+using NC.MicroService.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NC.Microservice.Infrastructure.Consul
+namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
     /// 注册 Consul注册和发现服务注入IOC容器扩展（加载配置） 

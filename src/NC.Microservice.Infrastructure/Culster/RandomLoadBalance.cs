@@ -1,9 +1,9 @@
-﻿using NC.Microservice.Infrastructure.Domain;
+﻿using NC.MicroService.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NC.Microservice.Infrastructure.Culster
+namespace NC.MicroService.Infrastructure.Culster
 {
     /// <summary>
     /// 随机负载均衡

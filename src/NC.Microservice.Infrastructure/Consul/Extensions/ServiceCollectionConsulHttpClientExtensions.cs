@@ -1,12 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using NC.Microservice.Infrastructure.Culster;
-using NC.Microservice.Infrastructure.Domain;
+using NC.MicroService.Infrastructure.Culster;
+using NC.MicroService.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NC.Microservice.Infrastructure.Consul
+namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
     /// 添加 HttpClientFactory conusl下的扩展 

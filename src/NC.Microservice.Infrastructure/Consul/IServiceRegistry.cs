@@ -1,9 +1,9 @@
-﻿using NC.Microservice.Infrastructure.Domain;
+﻿using NC.MicroService.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace NC.Microservice.Infrastructure.Consul
+namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
     /// 服务注册抽象接口

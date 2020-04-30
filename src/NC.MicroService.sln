@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.MicroService.EntityFrame
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.MicroService.TeamService", "NC.MicroService.TeamService\NC.MicroService.TeamService.csproj", "{D1A47A5C-A0CE-4DF8-950A-580BB79B2E30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NC.Microservice.Infrastructure", "NC.Microservice.Infrastructure\NC.Microservice.Infrastructure.csproj", "{A08F6347-E954-4BD8-9FDB-D1EDA5295EE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.MicroService.Infrastructure", "NC.MicroService.Infrastructure\NC.MicroService.Infrastructure.csproj", "{A08F6347-E954-4BD8-9FDB-D1EDA5295EE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 
-namespace NC.Microservice.Infrastructure.Domain
+namespace NC.MicroService.Infrastructure.Domain
 {
     /// <summary>
     /// Polly HttpClient熔断降级策略配置选项

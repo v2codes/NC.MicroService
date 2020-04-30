@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>NC.Microservice.Infrastructure</RootNamespace>
-    <AssemblyName>NC.Microservice.Infrastructure</AssemblyName>
+    <RootNamespace>NC.MicroService.Infrastructure</RootNamespace>
+    <AssemblyName>NC.MicroService.Infrastructure</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NC.Microservice.Infrastructure.Domain
+namespace NC.MicroService.Infrastructure.Domain
 {
     /// <summary>
     /// 微服务信息

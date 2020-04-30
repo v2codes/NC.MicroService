@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Polly;
-using NC.Microservice.Infrastructure.Domain;
+using NC.MicroService.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace NC.Microservice.Infrastructure.Polly
+namespace NC.MicroService.Infrastructure.Polly
 {
     /// <summary>
     /// 注册 Polly HttpClient服务注入IOC容器扩展

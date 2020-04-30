@@ -10,9 +10,9 @@ namespace NC.MicroService.TeamService.Services
     public class TeamService : ITeamService
     {
         private ITeamRepository _teamRepository;
-        public TeamService(TeamRepository teamRepository)
+        public TeamService(ITeamRepository teamRepository)
         {
-
+            this._teamRepository = teamRepository;
         }
 
         public void CreateTeam(Team team)

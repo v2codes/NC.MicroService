@@ -21,7 +21,7 @@ namespace NC.MicroService.Infrastructure.Consul
             var consulClient = new ConsulClient(config =>
             {
                 // 1.1 配置 Consul 服务端地址
-                config.Address = new Uri(serviceRegistryOption.Address);
+                config.Address = new Uri(serviceRegistryOption.RegistryAddress);
             });
 
             // 2. 获取服务内部地址

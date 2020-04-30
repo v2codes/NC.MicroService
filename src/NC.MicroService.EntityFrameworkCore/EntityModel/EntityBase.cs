@@ -1,5 +1,4 @@
-﻿using NC.MicroService.EntityFrameworkCore.Entity;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,36 +7,45 @@ namespace NC.MicroService.EntityFrameworkCore.EntityModel
     /// <summary>
     /// 实体基类
     /// </summary>
-    public class EntityBase<TKey>
+    public class EntityBase : IEntity<Guid>
     {
+        public EntityBase()
+        {
+            var dtNow = DateTime.Now;
+            this.Id = Guid.NewGuid();
+            this.CreateTime = dtNow;
+            this.CreateUser = Guid.Empty;
+            this.State = 0;
+        }
+
         /// <summary>
         /// 主键ID
         /// </summary>
-        public virtual TKey Id { get; set; }
+        public Guid Id { get; set; }
 
         /// <summary>
         /// 创建时间
         /// </summary>
-        public virtual DateTime CreateTime { get; set; }
+        public DateTime? CreateTime { get; set; }
 
         /// <summary>
         /// 创建人
         /// </summary>
-        public virtual TKey CreateUser { get; set; }
+        public Guid? CreateUser { get; set; }
 
         /// <summary>
         /// 更新时间
         /// </summary>
-        public virtual DateTime UpdateTime { get; set; }
+        public DateTime? UpdateTime { get; set; }
 
         /// <summary>
         /// 更新人
         /// </summary>
-        public virtual TKey UpdateUser { get; set; }
+        public Guid? UpdateUser { get; set; }
 
         /// <summary>
         /// 数据状态
         /// </summary>
-        public virtual int State { get; set; }
+        public int? State { get; set; }
     }
 }

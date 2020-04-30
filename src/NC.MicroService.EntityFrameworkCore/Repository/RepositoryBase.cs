@@ -15,7 +15,7 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class RepositoryBase<T, TKey> : IRepository<T, TKey> where T : EntityBase<TKey>
+    public class RepositoryBase<T, TKey> : IRepository<T, TKey> where T : class, IEntity<TKey>
     {
         private DbContext _dbContext;
         private DbSet<T> _dbSet => _dbContext.Set<T>();
@@ -60,8 +60,11 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
         }
         public virtual int Delete(TKey key)
         {
-            var entity = new EntityBase<TKey>() { Id = key };
-            return Delete(entity as T);
+            var instance = Activator.CreateInstance<T>();
+            instance.Id = key;
+            // var entry = _db.Entry(instance);
+            // entry.State = EntityState.Deleted;
+            return Delete(instance);
         }
         public virtual int Delete(Expression<Func<T, bool>> @where)
         {

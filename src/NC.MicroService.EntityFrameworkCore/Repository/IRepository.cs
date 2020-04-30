@@ -11,7 +11,7 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
     /// <summary>
     /// 仓储接口
     /// </summary>
-    public interface IRepository<T, TKey> : IDisposable where T : EntityBase<TKey>
+    public interface IRepository<T, TKey> : IDisposable where T : class, IEntity<TKey>
     {
         #region Insert
         int Insert(T entity);

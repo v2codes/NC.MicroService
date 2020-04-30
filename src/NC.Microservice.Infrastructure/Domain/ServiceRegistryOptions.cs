@@ -13,6 +13,7 @@ namespace NC.MicroService.Infrastructure.Domain
         {
             this.Timeout = 10;
             this.DeregisterAfterServiceStop = 5;
+            this.HealthCheckInterval = 10;
         }
 
         /// <summary>

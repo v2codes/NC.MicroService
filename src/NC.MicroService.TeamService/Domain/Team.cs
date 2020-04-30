@@ -10,7 +10,7 @@ namespace NC.MicroService.TeamService.Domain
     /// 团队
     /// 领域模型
     /// </summary>
-    public class Team : EntityBase<Guid>
+    public class Team : EntityBase
     {
         /// <summary>
         /// 团队名称

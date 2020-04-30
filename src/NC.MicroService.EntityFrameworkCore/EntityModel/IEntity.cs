@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NC.MicroService.EntityFrameworkCore.Entity
+namespace NC.MicroService.EntityFrameworkCore.EntityModel
 {
     /// <summary>
     /// 实体基类

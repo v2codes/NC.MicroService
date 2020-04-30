@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using NC.MicroService.TeamService.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace NC.MicroService.TeamService.EntityFrameworkCore
     /// </summary>
     public class CoreContext : DbContext
     {
+        public DbSet<Team> Teams { get; set; }
         public CoreContext(DbContextOptions<CoreContext> options)
             : base(options)
         {

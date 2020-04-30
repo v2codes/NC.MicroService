@@ -13,7 +13,7 @@ using System.Text;
 namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
-    /// 添加Consul中间件扩展
+    /// 添加Consul中间件扩展 
     /// </summary>
     public static class ApplicationBuilderConsulExtensions
     {
@@ -33,9 +33,8 @@ namespace NC.MicroService.Infrastructure.Consul
             // 2.1 获取服务注册实例
             var serviceRegistry = app.ApplicationServices.GetRequiredService<IServiceRegistry>();
 
-            // 3. 获取服务地址
-            var features = app.Properties["server.Featureas"] as FeatureCollection;
-            var address = features.Get<IServerAddressesFeature>().Addresses.First();
+            // 3. 动态获取服务地址
+            var address = app.ServerFeatures.Get<IServerAddressesFeature>().Addresses.First();
             var uri = new Uri(address);
 
             // 4. 注册服务

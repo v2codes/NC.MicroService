@@ -5,7 +5,7 @@ using System.Text;
 namespace NC.MicroService.Infrastructure.Domain
 {
     /// <summary>
-    /// 服务注册配置选项
+    /// 服务注册配置选项 
     /// </summary>
     public class ServiceRegistryOptions
     {
@@ -13,6 +13,7 @@ namespace NC.MicroService.Infrastructure.Domain
         {
             this.Timeout = 10;
             this.DeregisterAfterServiceStop = 5;
+            this.HealthCheckInterval = 10;
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ using System.Text;
 namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
-    /// Consul 服务注册
+    /// Consul 服务注册 
     /// </summary>
     public class ConsulServiceRegistry : IServiceRegistry
     {

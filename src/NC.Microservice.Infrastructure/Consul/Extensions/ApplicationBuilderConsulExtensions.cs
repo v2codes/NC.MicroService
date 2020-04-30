@@ -13,7 +13,7 @@ using System.Text;
 namespace NC.MicroService.Infrastructure.Consul
 {
     /// <summary>
-    /// 添加Consul中间件扩展
+    /// 添加Consul中间件扩展 
     /// </summary>
     public static class ApplicationBuilderConsulExtensions
     {

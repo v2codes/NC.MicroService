@@ -1,17 +1,17 @@
-﻿using System;
+﻿using NC.MicroService.EntityFrameworkCore.EntityModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using NC.MicroService.EntityFrameworkCore.EntityModel;
 
 namespace NC.MicroService.EntityFrameworkCore.Repository
 {
     /// <summary>
-    /// 仓储接口
+    /// 仓储服务抽象接口
     /// </summary>
-    public interface IRepository<T, TKey> : IDisposable where T : class, IEntity<TKey>
+    public interface IService<T, TKey> where T : IEntity<TKey>
     {
         #region Insert
         int Insert(T entity);
@@ -48,14 +48,14 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
         T Find(TKey key);
         T Find(Expression<Func<T, bool>> @where = null);
         T Find(TKey key, Func<IQueryable<T>, IQueryable<T>> includeFunc);
-        ValueTask<T> FindAsync(TKey key);
+        Task<T> FindAsync(TKey key);
         Task<T> FindAsync(Expression<Func<T, bool>> @where = null);
-        IQueryable<T> Query(Expression<Func<T, bool>> @where = null);
+        List<T> Query(Expression<Func<T, bool>> @where = null);
         Task<List<T>> QueryAsync(Expression<Func<T, bool>> @where = null);
-        IEnumerable<T> QueryByPagination(Expression<Func<T, bool>> @where, int pageSize, int pageIndex,
+        List<T> QueryByPagination(Expression<Func<T, bool>> @where, int pageSize, int pageIndex,
                                         bool asc = true,
                                         params Func<T, object>[] @orderby);
-        IQueryable<T> QueryAll();
+        List<T> QueryAll();
         //List<T> GetBySql(string sql);
         //List<TView> GetViews<TView>(string sql);
         //List<TView> GetViews<TView>(string viewName, Func<TView, bool> where);
@@ -63,6 +63,5 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
 
         int SaveChanges();
         Task<int> SaveChangesAsync();
-
     }
 }

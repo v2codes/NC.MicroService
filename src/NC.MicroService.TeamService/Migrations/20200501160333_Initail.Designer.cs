@@ -9,8 +9,8 @@ using NC.MicroService.TeamService.EntityFrameworkCore;
 namespace NC.MicroService.TeamService.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    [Migration("20200430183020_Initial")]
-    partial class Initial
+    [Migration("20200501160333_Initail")]
+    partial class Initail
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

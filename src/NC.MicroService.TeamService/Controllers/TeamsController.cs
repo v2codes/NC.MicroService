@@ -11,8 +11,8 @@ using NC.MicroService.TeamService.Services;
 
 namespace NC.MicroService.TeamService.Controllers
 {
+    [Route("Teams")]
     [ApiController]
-    [Route("[controller]")]
     public class TeamsController : ControllerBase
     {
         private ITeamService _teamService;
@@ -28,16 +28,16 @@ namespace NC.MicroService.TeamService.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Team>> GetTeams()
         {
-            Thread.Sleep(10000000);
+            // Thread.Sleep(10000000);
             // 1、演示宕机
-            return _teamService.GetTeams().ToList();
+            return _teamService.QueryAll();
         }
 
         // GET: api/Teams/5
         [HttpGet("{id}")]
         public ActionResult<Team> GetTeam(Guid id)
         {
-            Team team = _teamService.GetTeamById(id);
+            var team = _teamService.Find(id);
 
             if (team == null)
             {
@@ -59,11 +59,11 @@ namespace NC.MicroService.TeamService.Controllers
 
             try
             {
-                _teamService.UpdateTeam(team);
+                _teamService.Update(team);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!_teamService.TeamExists(id))
+                if (!_teamService.Exists(p => p.Id == id))
                 {
                     return NotFound();
                 }
@@ -82,7 +82,7 @@ namespace NC.MicroService.TeamService.Controllers
         [HttpPost]
         public ActionResult<Team> PostTeam(Team team)
         {
-            _teamService.CreateTeam(team);
+            _teamService.Insert(team);
 
             return CreatedAtAction("GetTeam", new { id = team.Id }, team);
         }
@@ -91,13 +91,13 @@ namespace NC.MicroService.TeamService.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Team> DeleteTeam(Guid id)
         {
-            var team = _teamService.GetTeamById(id);
+            var team = _teamService.Find(id);
             if (team == null)
             {
                 return NotFound();
             }
 
-            _teamService.DeleteTeam(team);
+            _teamService.Delete(id);
             return team;
         }
     }

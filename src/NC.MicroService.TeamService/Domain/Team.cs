@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 namespace NC.MicroService.TeamService.Domain
 {
     /// <summary>
-    /// 团队
-    /// 领域模型
+    /// 团队领域模型
     /// </summary>
     public class Team : EntityBase
     {

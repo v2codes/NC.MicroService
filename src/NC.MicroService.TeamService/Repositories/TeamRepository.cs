@@ -17,41 +17,5 @@ namespace NC.MicroService.TeamService.Repositories
                 : base(dbContext)
         {
         }
-
-        public void CreateTeam(Team team)
-        {
-            Insert(team);
-        }
-
-
-        public Team GetTeamById(Guid id)
-        {
-            return this.Find(id);
-        }
-
-        public void DeleteTeam(Team team)
-        {
-            this.DeleteTeam(team.Id);
-        }
-
-        public void DeleteTeam(Guid id)
-        {
-            this.Delete(id);
-        }
-
-        public void UpdateTeam(Team team)
-        {
-            this.Update(team);
-        }
-
-        public bool TeamExists(Guid id)
-        {
-            return this.Exist(p => p.Id == id);
-        }
-
-        public IEnumerable<Team> GetTeams()
-        {
-            return this.QueryAll().ToList();
-        }
     }
 }

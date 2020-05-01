@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Consul;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,14 +11,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NC.MicroService.EntityFrameworkCore.Repository;
 using NC.MicroService.Infrastructure.Consul;
-using NC.MicroService.TeamService.Domain;
-using NC.MicroService.TeamService.EntityFrameworkCore;
-using NC.MicroService.TeamService.Repositories;
-using NC.MicroService.TeamService.Services;
+using NC.MicroService.MemberService.EntityFrameworkCore;
+using NC.MicroService.MemberService.Repositories;
+using NC.MicroService.MemberService.Services;
 
-namespace NC.MicroService.TeamService
+namespace NC.MicroService.MemberService
 {
     public class Startup
     {
@@ -30,6 +27,7 @@ namespace NC.MicroService.TeamService
 
         public IConfiguration Configuration { get; }
 
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             // 1. 注册数据库上下文
@@ -38,16 +36,16 @@ namespace NC.MicroService.TeamService
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            // 2. 注册团队service
-            services.AddScoped<ITeamService, Services.TeamService>();
+            // 2. 注册成员Service
+            services.AddScoped<IMemberService, Services.MemberService>();
 
-            // 3. 注册团队仓储
-            services.AddScoped<ITeamRepository, TeamRepository>();
+            // 3. 注册成员仓储
+            services.AddScoped<IMemberRepository, MemberRepository>();
 
-            // 4. 注册映射
-            // services.AddAutoMapper();
+            // 4、添加映射
+            //services.AddAutoMapper();
 
-            // 5. 注册Consul注册服务
+            // 5、添加服务注册条件
             services.AddConsulRegistry(Configuration);
 
             services.AddControllers();
@@ -61,10 +59,10 @@ namespace NC.MicroService.TeamService
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             // 1. Consul服务注册
             app.UseConsulRegistry();
+
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 

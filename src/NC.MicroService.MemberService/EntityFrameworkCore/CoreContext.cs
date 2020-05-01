@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using NC.MicroService.TeamService.Domain;
+using NC.MicroService.MemberService.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NC.MicroService.TeamService.EntityFrameworkCore
+namespace NC.MicroService.MemberService.EntityFrameworkCore
 {
     /// <summary>
     /// 数据库上下文
@@ -17,8 +17,7 @@ namespace NC.MicroService.TeamService.EntityFrameworkCore
         {
 
         }
-
-        public DbSet<Team> Teams { get; set; }
+        public DbSet<Member> Members { get; set; }
 
     }
 }

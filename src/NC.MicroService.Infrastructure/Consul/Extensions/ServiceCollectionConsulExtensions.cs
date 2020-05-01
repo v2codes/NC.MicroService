@@ -18,7 +18,7 @@ namespace NC.MicroService.Infrastructure.Consul
         /// <param name="services"></param>
         /// <param name="configuration"></param>
         /// <returns></returns>
-        public static IServiceCollection AddConsulRegisry(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddConsulRegistry(this IServiceCollection services, IConfiguration configuration)
         {
             // 1. 加载 Consul 服务注册配置
             services.Configure<ServiceRegistryOptions>(configuration.GetSection("ConsulRegistry"));

@@ -12,10 +12,11 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
 
     /// <summary>
     /// 仓储基类
+    /// //TODO 校验逻辑未处理...
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <typeparam name="TKey"></typeparam>
-    public class RepositoryBase<T, TKey> : IRepository<T, TKey> where T : class, IEntity<TKey>
+    public abstract class RepositoryBase<T, TKey> : IRepository<T, TKey> where T : class, IEntity<TKey>
     {
         private DbContext _dbContext;
         private DbSet<T> _dbSet => _dbContext.Set<T>();
@@ -118,11 +119,11 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
             _dbSet.Count(@where);
             return SaveChangesAsync();
         }
-        public virtual bool Exist(Expression<Func<T, bool>> @where = null)
+        public virtual bool Exists(Expression<Func<T, bool>> @where = null)
         {
             return _dbSet.Any(@where);
         }
-        public virtual Task<bool> ExistAsync(Expression<Func<T, bool>> @where = null)
+        public virtual Task<bool> ExistsAsync(Expression<Func<T, bool>> @where = null)
         {
             return _dbSet.AnyAsync(@where);
         }

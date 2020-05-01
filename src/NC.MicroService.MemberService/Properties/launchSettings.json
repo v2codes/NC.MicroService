@@ -4,8 +4,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:52120",
-      "sslPort": 44365
+      "applicationUrl": "http://localhost:51756",
+      "sslPort": 44370
     }
   },
   "profiles": {
@@ -17,11 +17,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "NC.MicroService.TeamService": {
+    "NC.MicroService.MemberService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "Teams",
-      "applicationUrl": "https://localhost:5001",
+      "launchUrl": "Members",
+      "applicationUrl": "https://localhost:5002",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

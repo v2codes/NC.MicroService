@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace NC.MicroService.TeamService.Migrations
+namespace NC.MicroService.MemberService.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initail : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,7 +17,9 @@ namespace NC.MicroService.TeamService.Migrations
                     UpdateTime = table.Column<DateTime>(nullable: true),
                     UpdateUser = table.Column<Guid>(nullable: true),
                     State = table.Column<int>(nullable: true),
-                    TeamName = table.Column<string>(nullable: true)
+                    MemberName = table.Column<string>(nullable: true),
+                    NickName = table.Column<string>(nullable: true),
+                    TeamId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {

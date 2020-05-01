@@ -14,7 +14,7 @@ namespace NC.MicroService.Infrastructure.Consul
     public static class ServiceCollectionConsulHttpClientExtensions
     {
 
-        public static IServiceCollection AddHttpClientConsul<ConsulHttpClient>(this IServiceCollection services) where ConsulHttpClient : class
+        public static IServiceCollection AddConsulClient<ConsulHttpClient>(this IServiceCollection services) where ConsulHttpClient : class
         {
             // 1、注册consul
             services.AddConsulDiscovery();

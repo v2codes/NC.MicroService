@@ -49,7 +49,7 @@ namespace NC.MicroService.MemberService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Members");
                 });
 #pragma warning restore 612, 618
         }

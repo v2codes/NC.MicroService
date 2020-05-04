@@ -9,8 +9,8 @@ using NC.MicroService.MemberService.EntityFrameworkCore;
 namespace NC.MicroService.MemberService.Migrations
 {
     [DbContext(typeof(CoreContext))]
-    [Migration("20200501160552_Initail")]
-    partial class Initail
+    [Migration("20200504040402_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,7 +51,7 @@ namespace NC.MicroService.MemberService.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Teams");
+                    b.ToTable("Members");
                 });
 #pragma warning restore 612, 618
         }

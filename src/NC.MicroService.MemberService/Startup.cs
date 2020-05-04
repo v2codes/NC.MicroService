@@ -33,7 +33,7 @@ namespace NC.MicroService.MemberService
             // 1. 注册数据库上下文
             services.AddDbContext<CoreContext>(options =>
             {
-                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+                options.UseMySql(Configuration.GetConnectionString("AiConnection"));// AiConnection DefaultConnection
             });
 
             // 2. 注册成员Service

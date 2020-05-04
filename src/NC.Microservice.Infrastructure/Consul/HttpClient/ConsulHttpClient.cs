@@ -54,7 +54,8 @@ namespace NC.MicroService.Infrastructure.Consul
 
             // 3. 请求服务
             var httpClient = _httpClientFactory.CreateClient("micro");
-            var response = await httpClient.GetAsync($"{service.Url}{requirePath}");
+            //var response = await httpClient.GetAsync($"{service.Url}{requirePath}");//TODO：Ocelot结合Consul会出错，注意Scheme
+            var response = await httpClient.GetAsync($"{serviceScheme}://{service.Url}{requirePath}"); 
 
             // 3.1 响应结果，json转换为对象
             if (response.StatusCode == HttpStatusCode.OK)

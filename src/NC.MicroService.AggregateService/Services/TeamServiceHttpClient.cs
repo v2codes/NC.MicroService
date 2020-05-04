@@ -28,16 +28,16 @@ namespace NC.MicroService.AggregateService.Services
         // Consul HttpClient 请求
         private readonly ConsulHttpClient _consulHttpClient;
 
-        //public TeamServiceHttpClient(ConsulHttpClient consulHttpClient)
-        //{
-        //    this._consulHttpClient = consulHttpClient;
-        //}
-
-        private readonly IHttpClientFactory _httpClientFactory;
-        public TeamServiceHttpClient(IHttpClientFactory httpClientFactory)
+        public TeamServiceHttpClient(ConsulHttpClient consulHttpClient)
         {
-            this._httpClientFactory = httpClientFactory;
+            this._consulHttpClient = consulHttpClient;
         }
+
+        //private readonly IHttpClientFactory _httpClientFactory;
+        //public TeamServiceHttpClient(IHttpClientFactory httpClientFactory)
+        //{
+        //    this._httpClientFactory = httpClientFactory;
+        //}
 
         /// <summary>
         /// 获取所有团队

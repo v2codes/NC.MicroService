@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace NC.MicroService.MemberService.Migrations
 {
-    public partial class Initail : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Teams",
+                name: "Members",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -23,14 +23,14 @@ namespace NC.MicroService.MemberService.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Teams", x => x.Id);
+                    table.PrimaryKey("PK_Members", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Teams");
+                name: "Members");
         }
     }
 }

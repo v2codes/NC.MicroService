@@ -1,0 +1,27 @@
+{
+  "ReRoutes": [
+
+  ],
+  "Aggregates": [
+    {
+      "ReRouteKeys": [
+        "members",
+        "teams"
+      ],
+      "UpstreamPathTemplate": "/ocelot/common"
+    }
+  ],
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    },
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false,
+      "QuotaExceededMessage": "ruanmou test!",
+      "HttpStatusCode": 999,
+      "ClientIdHeader": "Test"
+    }
+  }
+}

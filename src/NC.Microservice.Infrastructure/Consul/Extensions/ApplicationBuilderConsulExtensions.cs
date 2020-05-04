@@ -39,7 +39,8 @@ namespace NC.MicroService.Infrastructure.Consul
 
             // 4. 注册服务
             serviceRegistryOption.Id = Guid.NewGuid().ToString();
-            serviceRegistryOption.Address = $"{uri.Scheme}://{uri.Host}";
+            //serviceRegistryOption.Address = $"{uri.Scheme}://{uri.Host}"; //TODO：Ocelot结合Consul会出错，注意Scheme
+            serviceRegistryOption.Address = $"{uri.Host}"; 
             serviceRegistryOption.Port = uri.Port;
             serviceRegistryOption.HealthCheckAddress = $"{uri.Scheme}://{uri.Host}:{uri.Port}{serviceRegistryOption.HealthCheckAddress}";
             serviceRegistry.Register(serviceRegistryOption);

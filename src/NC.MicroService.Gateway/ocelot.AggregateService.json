@@ -1,0 +1,50 @@
+{
+  "ReRoutes": [ // 单路由示例
+    {
+      // 上游配置
+      "UpstreamPathTemplate": "/ocelot/aggregate", // 上游也就是用户输入的请求Url模板 
+      "UpstreamHttpMethod": [ "Get" ], // 上游请求http方法，可使用数组
+      // 下游配置
+      "DownstreamPathTemplate": "/api/TeamInfos", // 下游路径模板
+      "DownstreamScheme": "https", // 下游服务http schema
+
+      // 动态路由：Consul
+      "Servicename": "AggregateService",
+
+      "LoadBalancerOptions": { // 负载均衡
+        "Type": "LeastConnection" // 算法之一：把新请求发送到现有请求最少的服务上
+      },
+
+      // 限流，使用的计数器算法
+      "RateLimitOptions": {
+        "ClientWhitelist": [], // 白名单
+        "EnableRateLimiting": true, // 是否启用限流
+        "Period": "10s", //  统计时间段：1s, 5m, 1h, 1d
+        "PeriodTimespan": 1, //  多少秒之后客户端可以重试
+        "Limit": 1000 // 在统计时间段内允许的最大请求数量
+      },
+
+      // 熔断、降级
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 3, // 允许多少个异常请求
+        "DurationOfBreak": 5, // 熔断的时间，单位为秒
+        "TimeoutValue": 60000 // 如果下游请求的处理时间超过多少则自动将请求设置为超时
+      }
+    }
+  ],
+
+  // 全局配置
+  "GlobalConfiguration": {
+    "ServiceDiscoveryProvider": {
+      "Host": "localhost",
+      "Port": 8500,
+      "Type": "Consul"
+    },
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false, // Http头  X-Rate-Limit 和 Retry-After 是否禁用
+      "QuotaExceededMessage": "RateLimitOptions test!", // "访问被拒绝，因为，加了限流处理！！！！", // 当请求过载被截断时返回的消息
+      "HttpStatusCode": 999, // 当请求过载被截断时返回的http status
+      "ClientIdHeader": "Test" // 用来识别客户端的请求头，默认是 ClientId
+    }
+  }
+}

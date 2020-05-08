@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using NC.MicroService.TeamService.Services;
 namespace NC.MicroService.TeamService.Controllers
 {
     [Route("Teams")]
+    [Authorize] // 1. 保护起来
     [ApiController]
     public class TeamsController : ControllerBase
     {

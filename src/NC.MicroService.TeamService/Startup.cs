@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Consul;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,7 +36,7 @@ namespace NC.MicroService.TeamService
             // 1. 注册数据库上下文
             services.AddDbContext<CoreContext>(options =>
             {
-                options.UseMySql(Configuration.GetConnectionString("AiConnection"));// AiConnection DefaultConnection
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));// AiConnection DefaultConnection
             });
 
             // 2. 注册团队service
@@ -49,6 +50,15 @@ namespace NC.MicroService.TeamService
 
             // 5. 注册Consul注册服务
             services.AddConsulRegistry(Configuration);
+
+            // 6、校验AccessToken,从身份校验中心进行校验
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                    .AddIdentityServerAuthentication(options =>
+                    {
+                        options.Authority = "http://localhost:5005"; // 1、授权中心地址
+                        options.ApiName = "TeamService"; // 2、api名称(项目具体名称)
+                        options.RequireHttpsMetadata = false; // 3、https元数据，不需要
+                    });
 
             services.AddControllers();
         }
@@ -68,7 +78,9 @@ namespace NC.MicroService.TeamService
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();// 1. 开启身份验证
+
+            app.UseAuthorization(); // 2. 使用授权
 
             app.UseEndpoints(endpoints =>
             {

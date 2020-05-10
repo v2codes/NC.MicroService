@@ -43,6 +43,8 @@ namespace NC.MicroService.Infrastructure.Consul
                     DeregisterCriticalServiceAfter = TimeSpan.FromSeconds(serviceRegistryOption.DeregisterAfterServiceStop),
                     // 3.3 Consul 健康检查地址
                     HTTP = serviceRegistryOption.HealthCheckAddress,
+                    // 3.3.1 跳过证书验证 --> 未安装有效证书时，可以通过此参数跳过证书校验
+                    TLSSkipVerify = true,
                     // 3.4 Consul 健康检查间隔时间
                     Interval = TimeSpan.FromSeconds(serviceRegistryOption.HealthCheckInterval),
                 }

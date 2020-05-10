@@ -8,6 +8,9 @@ using NC.MicroService.Infrastructure.Domain;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Text;
 
 namespace NC.MicroService.Infrastructure.Consul
@@ -37,12 +40,15 @@ namespace NC.MicroService.Infrastructure.Consul
             var address = app.ServerFeatures.Get<IServerAddressesFeature>().Addresses.First();
             var uri = new Uri(address);
 
+            string localIpAddress = GetLocalIpAddress();
+
             // 4. 注册服务
             serviceRegistryOption.Id = Guid.NewGuid().ToString();
             //serviceRegistryOption.Address = $"{uri.Scheme}://{uri.Host}"; //TODO：Ocelot结合Consul会出错，注意Scheme.
-            serviceRegistryOption.Address = $"{uri.Host}";
+            serviceRegistryOption.Address = localIpAddress; // $"{uri.Host}";
             serviceRegistryOption.Port = uri.Port;
-            serviceRegistryOption.HealthCheckAddress = $"{uri.Scheme}://{uri.Host}:{uri.Port}{serviceRegistryOption.HealthCheckAddress}";
+            //serviceRegistryOption.HealthCheckAddress = $"{uri.Scheme}://{uri.Host}:{uri.Port}{serviceRegistryOption.HealthCheckAddress}";
+            serviceRegistryOption.HealthCheckAddress = $"{uri.Scheme}://{localIpAddress}:{uri.Port}{serviceRegistryOption.HealthCheckAddress}";
             serviceRegistry.Register(serviceRegistryOption);
 
             // 5、服务器关闭时注销服务
@@ -52,6 +58,27 @@ namespace NC.MicroService.Infrastructure.Consul
             });
 
             return app;
+        }
+
+        public static string GetLocalIpAddress()
+        {
+            //获取服务器上所有网卡的IP地址
+            NetworkInterface[] networks = NetworkInterface.GetAllNetworkInterfaces();
+            string serverIpAddresses = string.Empty;
+
+            foreach (var network in networks)
+            {
+                var ipAddress = network.GetIPProperties().UnicastAddresses.Where(p => p.Address.AddressFamily == AddressFamily.InterNetwork && !IPAddress.IsLoopback(p.Address)).FirstOrDefault()?.Address.ToString();
+
+                serverIpAddresses += network.Name + ":" + ipAddress + "|";
+
+                if (network.Name == "以太网")// "vEthernet (Default Switch)")
+                {
+                    return ipAddress;
+                }
+            }
+
+            return serverIpAddresses;
         }
     }
 }

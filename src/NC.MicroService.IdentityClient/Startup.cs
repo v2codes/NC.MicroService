@@ -35,7 +35,7 @@ namespace NC.MicroService.IdentityClient
                     .AddOpenIdConnect("oidc", options =>
                     {
                         // 1. 生成id_token
-                        options.Authority = "http://localhost:5005";    // 受信任令牌服务地址
+                        options.Authority = "http://192.168.2.102:5005";    // 受信任令牌服务地址
                         options.RequireHttpsMetadata = false;
                         options.ClientId = "client-code";
                         options.ClientSecret = "secret";
@@ -64,6 +64,8 @@ namespace NC.MicroService.IdentityClient
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
+            // 使用静态文件
             app.UseStaticFiles();
 
             app.UseRouting();

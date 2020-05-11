@@ -42,20 +42,20 @@ namespace NC.MicroService.IdentityClient.Controllers
 
             #region openid connect 协议
             {
-                // 1、获取token(id-token , access_token ,refresh_token)
-                var accessToken = await HttpContext.GetTokenAsync("access_token"); // ("id_token")
-                Console.WriteLine($"accessToken:{accessToken}");
-                // var refreshToken =await HttpContext.GetTokenAsync("refresh_token");
-                var client = new HttpClient();
-                client.SetBearerToken(accessToken);
-                /*client.DefaultRequestHeaders.Authorization =
-                    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);*/
+                //// 1、获取token(id-token , access_token ,refresh_token)
+                //var accessToken = await HttpContext.GetTokenAsync("access_token"); // ("id_token")
+                //Console.WriteLine($"accessToken:{accessToken}");
+                //// var refreshToken =await HttpContext.GetTokenAsync("refresh_token");
+                //var client = new HttpClient();
+                //client.SetBearerToken(accessToken);
+                ///*client.DefaultRequestHeaders.Authorization =
+                //    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);*/
 
-                // 2、使用token
-                var result = await client.GetStringAsync("https://localhost:5001/teams");
+                //// 2、使用token
+                //var result = await client.GetStringAsync("https://192.2.102:5001/teams");
 
-                // 3、响应结果到页面
-                ViewData.Add("Json", result);
+                //// 3、响应结果到页面
+                //ViewData.Add("Json", result);
             }
             #endregion
 
@@ -70,7 +70,7 @@ namespace NC.MicroService.IdentityClient.Controllers
         {
             // 1. 建立连接
             var client = new HttpClient();
-            DiscoveryDocumentResponse discovery = await client.GetDiscoveryDocumentAsync("https://localhost:5005");
+            DiscoveryDocumentResponse discovery = await client.GetDiscoveryDocumentAsync("https://192.2.102:5005");
             if (discovery.IsError)
             {
                 Console.WriteLine($"[DiscoveryDocumentResponse Error]: {discovery.Error}");
@@ -141,7 +141,7 @@ namespace NC.MicroService.IdentityClient.Controllers
         {
             HttpClient apiClient = new HttpClient();
             apiClient.SetBearerToken(AccessToken); // 1、设置token到请求头
-            HttpResponseMessage response = await apiClient.GetAsync("https://localhost:5001/teams");
+            HttpResponseMessage response = await apiClient.GetAsync("https://192.2.102:5001/teams");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"API Request Error, StatusCode is : {response.StatusCode}");

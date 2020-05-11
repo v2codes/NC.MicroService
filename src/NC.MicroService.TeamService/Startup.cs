@@ -55,7 +55,7 @@ namespace NC.MicroService.TeamService
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = "http://localhost:5005"; // 1、授权中心地址
+                        options.Authority = "http://192.168.2.102:5005"; // 1、授权中心地址
                         options.ApiName = "TeamService"; // 2、api名称(项目具体名称)
                         options.RequireHttpsMetadata = false; // 3、https元数据，不需要
                     });
@@ -78,9 +78,11 @@ namespace NC.MicroService.TeamService
 
             app.UseRouting();
 
-            app.UseAuthentication();// 1. 开启身份验证
+            // 1. 开启身份验证
+            app.UseAuthentication();
 
-            app.UseAuthorization(); // 2. 使用授权
+            // 2. 使用授权
+            app.UseAuthorization(); 
 
             app.UseEndpoints(endpoints =>
             {

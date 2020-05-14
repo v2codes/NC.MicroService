@@ -78,9 +78,9 @@ namespace NC.MicroService.IdentityServer4
                     RequireConsent=false,
                     RequirePkce=true,
 
-                    RedirectUris={ "https://localhost:5006/signin-oidc"}, // 1、客户端地址
+                    RedirectUris={ "https://192.168.2.102:5006/signin-oidc"}, // 1、客户端地址
 
-                    PostLogoutRedirectUris={ "https://localhost:5006/signout-callback-oidc"},// 2、登录退出地址
+                    PostLogoutRedirectUris={ "https://192.168.2.102:5006/signout-callback-oidc"},// 2、登录退出地址
 
                     AllowedScopes=new List<string>{
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -121,12 +121,12 @@ namespace NC.MicroService.IdentityServer4
                 new TestUser{SubjectId = "818727", Username = "leo-1", Password = "123456",
                     Claims =
                     {
-                        new Claim(JwtClaimTypes.Name, "tony-1"),
-                        new Claim(JwtClaimTypes.GivenName, "tony-1"),
-                        new Claim(JwtClaimTypes.FamilyName, "tony-1"),
-                        new Claim(JwtClaimTypes.Email, "tony-1@email.com"),
+                        new Claim(JwtClaimTypes.Name, "leo-1"),
+                        new Claim(JwtClaimTypes.GivenName, "leo-1"),
+                        new Claim(JwtClaimTypes.FamilyName, "leo-1"),
+                        new Claim(JwtClaimTypes.Email, "leo-1@email.com"),
                         new Claim(JwtClaimTypes.EmailVerified, "true", ClaimValueTypes.Boolean),
-                        new Claim(JwtClaimTypes.WebSite, "http://tony-1.com"),
+                        new Claim(JwtClaimTypes.WebSite, "http://leo-1.com"),
                         // new Claim(JwtClaimTypes.Address, @"{ '城市': '杭州', '邮政编码': '310000' }",IdentityServer4.IdentityServerConstants.ClaimValueTypes.Json)
                     }
                 }

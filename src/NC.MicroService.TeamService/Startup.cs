@@ -55,7 +55,7 @@ namespace NC.MicroService.TeamService
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = "http://192.168.2.102:5005"; // 1、授权中心地址
+                        options.Authority = "https://192.168.2.102:5005"; // 1、授权中心地址
                         options.ApiName = "TeamService"; // 2、api名称(项目具体名称)
                         options.RequireHttpsMetadata = false; // 3、https元数据，不需要
                     });

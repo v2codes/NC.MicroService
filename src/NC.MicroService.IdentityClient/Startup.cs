@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,7 +38,7 @@ namespace NC.MicroService.IdentityClient
                     .AddOpenIdConnect("oidc", options =>
                     {
                         // 1. 生成id_token
-                        options.Authority = "http://192.168.2.102:5005";    // 受信任令牌服务地址
+                        options.Authority = "https://192.168.2.102:5005";    // 受信任令牌服务地址
                         options.RequireHttpsMetadata = false;
                         options.ClientId = "client-code";
                         options.ClientSecret = "secret";
@@ -47,6 +50,20 @@ namespace NC.MicroService.IdentityClient
                         options.Scope.Add("offline_access");
                     });
 
+
+            // 注入 IHttpClieFactory
+            services.AddHttpClient("disableHttpsValidation")
+                    .ConfigurePrimaryHttpMessageHandler(() =>
+                    {
+                        // 开发环境下，禁用 HTTPS 证书验证
+                        return new HttpClientHandler()
+                        {
+                            ServerCertificateCustomValidationCallback = (httpRequestMessage, x509Cert, x509Chain, errors) =>
+                            {
+                                return true;
+                            },
+                        };
+                    });
             services.AddControllersWithViews();
         }
 
@@ -63,6 +80,16 @@ namespace NC.MicroService.IdentityClient
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
+            {
+                return true;
+            };
+
+            System.Net.ServicePointManager.Expect100Continue = true;
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls
+            | System.Net.SecurityProtocolType.Tls11
+            | System.Net.SecurityProtocolType.Tls12;
+
             app.UseHttpsRedirection();
 
             // 使用静态文件
@@ -71,7 +98,7 @@ namespace NC.MicroService.IdentityClient
             app.UseRouting();
 
             // 1. 添加身份认证
-            app.UseAuthentication(); 
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

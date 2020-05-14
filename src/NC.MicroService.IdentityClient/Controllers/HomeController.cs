@@ -17,8 +17,11 @@ namespace NC.MicroService.IdentityClient.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly IHttpClientFactory _httpClientFactory;
+
+        public HomeController(IHttpClientFactory httpClientFactory, ILogger<HomeController> logger)
         {
+            _httpClientFactory = httpClientFactory;
             _logger = logger;
         }
 
@@ -52,7 +55,7 @@ namespace NC.MicroService.IdentityClient.Controllers
                 //    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);*/
 
                 //// 2、使用token
-                //var result = await client.GetStringAsync("https://192.2.102:5001/teams");
+                //var result = await client.GetStringAsync("https://192.168.2.102:5001/teams");
 
                 //// 3、响应结果到页面
                 //ViewData.Add("Json", result);
@@ -66,11 +69,24 @@ namespace NC.MicroService.IdentityClient.Controllers
         /// 1. 获取 access token
         /// </summary>
         /// <returns></returns>
-        public static async Task<string> GetAccessToken()
+        public async Task<string> GetAccessToken()
         {
             // 1. 建立连接
-            var client = new HttpClient();
-            DiscoveryDocumentResponse discovery = await client.GetDiscoveryDocumentAsync("https://192.2.102:5005");
+            DiscoveryDocumentResponse discovery;
+            TokenResponse tokenResponse;
+
+            // 使用 IHttpClientFactory代替
+            //var handler = new HttpClientHandler();
+            //handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, x509, x509Chain, errors) =>
+            //{
+            //    return true;
+            //};
+            //var client = new HttpClient(handler);
+
+
+            var client = _httpClientFactory.CreateClient("disableHttpsValidation");
+            string serverUrl = "https://192.168.2.102:5005";
+            discovery = await client.GetDiscoveryDocumentAsync(serverUrl);
             if (discovery.IsError)
             {
                 Console.WriteLine($"[DiscoveryDocumentResponse Error]: {discovery.Error}");
@@ -86,7 +102,7 @@ namespace NC.MicroService.IdentityClient.Controllers
              });*/
 
             // 1.2 通过客户端用户密码获取 AccessToken
-            TokenResponse tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
             {
                 Address = discovery.TokenEndpoint,
                 ClientId = "client-password",
@@ -95,7 +111,6 @@ namespace NC.MicroService.IdentityClient.Controllers
                 UserName = "leo",
                 Password = "123456"
             });
-
 
             // 1.3 通过授权code获取AccessToken[需要进行登录]
             /* TokenResponse tokenResponse = await client.RequestAuthorizationCodeTokenAsync
@@ -108,6 +123,7 @@ namespace NC.MicroService.IdentityClient.Controllers
                     RedirectUri = "http://localhost:5005"
 
                 });*/
+
 
             if (tokenResponse.IsError)
             {
@@ -137,11 +153,12 @@ namespace NC.MicroService.IdentityClient.Controllers
         /// <summary>
         /// 2、使用token
         /// </summary>
-        public static async Task<string> UseAccessToken(string AccessToken)
+        public async Task<string> UseAccessToken(string AccessToken)
         {
-            HttpClient apiClient = new HttpClient();
+            var apiClient = _httpClientFactory.CreateClient("disableHttpsValidation");
             apiClient.SetBearerToken(AccessToken); // 1、设置token到请求头
-            HttpResponseMessage response = await apiClient.GetAsync("https://192.2.102:5001/teams");
+            HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.102:5001/teams");
+
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine($"API Request Error, StatusCode is : {response.StatusCode}");

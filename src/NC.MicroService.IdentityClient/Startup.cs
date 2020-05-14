@@ -80,15 +80,11 @@ namespace NC.MicroService.IdentityClient
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            System.Net.ServicePointManager.ServerCertificateValidationCallback += (sender, certificate, chain, errors) =>
-            {
-                return true;
-            };
 
-            System.Net.ServicePointManager.Expect100Continue = true;
-            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls
-            | System.Net.SecurityProtocolType.Tls11
-            | System.Net.SecurityProtocolType.Tls12;
+            //System.Net.ServicePointManager.Expect100Continue = true;
+            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls
+            //| System.Net.SecurityProtocolType.Tls11
+            //| System.Net.SecurityProtocolType.Tls12;
 
             app.UseHttpsRedirection();
 

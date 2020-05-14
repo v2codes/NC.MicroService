@@ -71,6 +71,11 @@ namespace NC.MicroService.TeamService
                 app.UseDeveloperExceptionPage();
             }
 
+            //System.Net.ServicePointManager.Expect100Continue = true;
+            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls
+            //| System.Net.SecurityProtocolType.Tls11
+            //| System.Net.SecurityProtocolType.Tls12;
+
             app.UseHttpsRedirection();
 
             // 1. Consul·þÎñ×¢²á

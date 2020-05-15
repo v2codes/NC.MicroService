@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IdentityModel;
@@ -10,11 +11,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NC.MicroService.IdentityServer4.DbContext;
+using NC.MicroService.IdentityServer4.Models;
 
 namespace NC.MicroService.IdentityServer4
 {
@@ -30,13 +33,69 @@ namespace NC.MicroService.IdentityServer4
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // 1. IOC容器中添加 IdentityServer4
+            #region 内存存储，用于简单功能性测试
+            //// 1. IOC容器中添加 IdentityServer4
+            //services.AddIdentityServer()
+            //        .AddDeveloperSigningCredential() // 用户登录配置，生产环境需要配置具体登录签名凭据
+            //         // 测试数据，内存存储
+            //        .AddInMemoryApiResources(IdentityServer4Config.GetApiResources()) // 存储API资源，此处使用了测试数据，
+            //        .AddInMemoryClients(IdentityServer4Config.GetClients())// 存储客户端（模式），配置允许访问IdentityServer4的客户端
+            //        .AddTestUsers(IdentityServer4Config.GetUsers()) // 客户端用户，测试数据
+            //        .AddInMemoryIdentityResources(IdentityServer4Config.Ids); // openid 身份资源，测试数据
+            #endregion
+
+            #region 将Config配置持久化
+            // 1. 
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");// AiConnection DefaultConnection
             services.AddIdentityServer()
-                    .AddDeveloperSigningCredential() // 用户登录配置，生产环境需要配置具体登录签名凭据
-                    .AddInMemoryApiResources(IdentityServer4Config.GetApiResources()) // 存储API资源，此处使用了测试数据，
-                    .AddInMemoryClients(IdentityServer4Config.GetClients())// 存储客户端（模式），配置允许访问IdentityServer4的客户端
-                    .AddTestUsers(IdentityServer4Config.GetUsers()) // 客户端用户，测试数据
-                    .AddInMemoryIdentityResources(IdentityServer4Config.Ids); // openid 身份资源，测试数据
+                    //表：api/client/identity前缀的 
+                    .AddConfigurationStore(options =>
+                    {
+                        options.ConfigureDbContext = builder =>
+                        {
+                            builder.UseMySql(connectionString, options =>
+                            {
+                                options.MigrationsAssembly(migrationsAssembly);
+                            });
+                        };
+                    })
+                    //表： devicecodes persistedgrants
+                    .AddOperationalStore(options => 
+                    {
+                        options.ConfigureDbContext = builder =>
+                        {
+                            builder.UseMySql(connectionString, options =>
+                            {
+                                options.MigrationsAssembly(migrationsAssembly);
+                            });
+                        };
+                    })
+                    //.AddTestUsers(IdentityServer4Config.GetUsers())  // 同样，用户数据也需要改为持久化
+                    .AddDeveloperSigningCredential();
+            #endregion
+
+            #region 用户数据持久化
+            // 2. 注入数据库上下文、
+            services.AddDbContext<IdentityServerDbContext>(options =>
+            {
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));// AiConnection DefaultConnection
+            });
+
+            // 用户角色配置，表：aspnet前缀
+            services.AddIdentity<User, Role>(options =>
+            {
+                // 3.1 密码复杂度配置
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequiredUniqueChars = 1;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+            })
+            .AddEntityFrameworkStores<IdentityServerDbContext>()
+            .AddDefaultTokenProviders(); // 默认token提供程序，也可以不加
+            #endregion
 
             services.AddControllersWithViews();
         }
@@ -44,6 +103,11 @@ namespace NC.MicroService.IdentityServer4
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // 初始化配置数据数据
+            //InitializeDatabase(app);
+            // 初始化用户数据
+            InitializeUserDatabase(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -73,6 +137,8 @@ namespace NC.MicroService.IdentityServer4
             });
 
         }
+
+        #region 初始化测试数据：客户端、API资源、测试用户
 
         // 1. 将config中数据存储起来
         private void InitializeDatabase(IApplicationBuilder app)
@@ -117,17 +183,17 @@ namespace NC.MicroService.IdentityServer4
         {
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
-                var context = serviceScope.ServiceProvider.GetService<IdentityServerContext>();
+                var context = serviceScope.ServiceProvider.GetService<IdentityServerDbContext>();
                 context.Database.Migrate();
 
-                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
-                var idnetityUser = userManager.FindByNameAsync("tony").Result;
+                var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<User>>();
+                var idnetityUser = userManager.FindByNameAsync("leo").Result;
                 if (idnetityUser == null)
                 {
-                    idnetityUser = new IdentityUser
+                    idnetityUser = new User
                     {
-                        UserName = "zhangsan",
-                        Email = "zhangsan@email.com"
+                        UserName = "leo",
+                        Email = "leo@email.com"
                     };
                     var result = userManager.CreateAsync(idnetityUser, "123456").Result;
                     if (!result.Succeeded)
@@ -150,5 +216,8 @@ namespace NC.MicroService.IdentityServer4
                 }
             }
         }
+
+        #endregion
+
     }
 }

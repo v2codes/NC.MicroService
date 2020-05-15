@@ -29,36 +29,39 @@ namespace NC.MicroService.IdentityClient.Controllers
         {
             #region token模式
             {
-                // 1. 生成 Access Token
-                //    1.1 客户端模式
-                //    1.2 客户端用户密码模式
-                //    1.3 客户端code状态码模式 --> 类似微信网页授权中的code
-                string accessToken = await GetAccessToken();
+                //// 1. 生成 Access Token
+                ////    1.1 客户端模式
+                ////    1.2 客户端用户密码模式
+                ////    1.3 客户端code状态码模式 --> 类似微信网页授权中的code
+                //string accessToken = await GetAccessToken();
 
-                // 2. 使用 AccessToken 进行资源访问
-                string result = await UseAccessToken(accessToken);
+                //// 2. 使用 AccessToken 进行资源访问
+                //string result = await UseAccessToken(accessToken);
 
-                // 3. 相应结果到页面
-                ViewData.Add("Json", result);
+                //// 3. 相应结果到页面
+                //ViewData.Add("Json", result);
             }
             #endregion
 
             #region openid connect 协议
             {
-                //// 1、获取token(id-token , access_token ,refresh_token)
-                //var accessToken = await HttpContext.GetTokenAsync("access_token"); // ("id_token")
-                //Console.WriteLine($"accessToken:{accessToken}");
-                //// var refreshToken =await HttpContext.GetTokenAsync("refresh_token");
-                //var client = new HttpClient();
-                //client.SetBearerToken(accessToken);
-                ///*client.DefaultRequestHeaders.Authorization =
-                //    new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);*/
+                // 1、获取token(id-token , access_token ,refresh_token)
+                var accessToken = await HttpContext.GetTokenAsync("access_token"); // 以及 id_token
+                Console.WriteLine($"accessToken:{accessToken}");
+                var refreshToken = await HttpContext.GetTokenAsync("refresh_token");
+                Console.WriteLine($"refresh_token:{refreshToken}");
+                
+                var client = _httpClientFactory.CreateClient("disableHttpsValidation");
 
-                //// 2、使用token
-                //var result = await client.GetStringAsync("https://192.168.2.102:5001/teams");
+                // 这两种方式都可以，设置请求头accesstoken
+                client.SetBearerToken(accessToken);
+                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-                //// 3、响应结果到页面
-                //ViewData.Add("Json", result);
+                // 2、使用token
+                var result = await client.GetStringAsync("https://192.168.2.102:5001/teams");
+
+                // 3、响应结果到页面
+                ViewData.Add("Json", result);
             }
             #endregion
 
@@ -75,7 +78,7 @@ namespace NC.MicroService.IdentityClient.Controllers
             DiscoveryDocumentResponse discovery;
             TokenResponse tokenResponse;
 
-            // 使用 IHttpClientFactory代替
+            // ==> 使用 IHttpClientFactory 代替
             //var handler = new HttpClientHandler();
             //handler.ServerCertificateCustomValidationCallback = (httpRequestMessage, x509, x509Chain, errors) =>
             //{
@@ -93,36 +96,34 @@ namespace NC.MicroService.IdentityClient.Controllers
             }
 
             // 1.1、通过客户端获取AccessToken
-            /* TokenResponse tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-             {
-                 Address = disco.TokenEndpoint, // 1、生成AccessToken中心
-                 ClientId = "client", // 2、客户端编号
-                 ClientSecret = "secret",// 3、客户端密码
-                 Scope = "TeamService" // 4、客户端需要访问的API
-             });*/
+            //tokenResponse = await client.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
+            //{
+            //    Address = discovery.TokenEndpoint, // 1、生成AccessToken中心
+            //    ClientId = "client", // 2、客户端编号
+            //    ClientSecret = "secret",// 3、客户端密码
+            //    Scope = "TeamService" // 4、客户端需要访问的API
+            //});
 
             // 1.2 通过客户端用户密码获取 AccessToken
-            tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
-            {
-                Address = discovery.TokenEndpoint,
-                ClientId = "client-password",
-                ClientSecret = "secret",
-                Scope = "TeamService",
-                UserName = "leo",
-                Password = "123456"
-            });
+            //tokenResponse = await client.RequestPasswordTokenAsync(new PasswordTokenRequest
+            //{
+            //    Address = discovery.TokenEndpoint,
+            //    ClientId = "client-password",
+            //    ClientSecret = "secret",
+            //    Scope = "TeamService",
+            //    UserName = "leo11",
+            //    Password = "123456"
+            //});
 
             // 1.3 通过授权code获取AccessToken[需要进行登录]
-            /* TokenResponse tokenResponse = await client.RequestAuthorizationCodeTokenAsync
-                (new AuthorizationCodeTokenRequest
-                {
-                    Address = disco.TokenEndpoint,
-                    ClientId = "client-code",
-                    ClientSecret = "secret",
-                    Code = "12",
-                    RedirectUri = "http://localhost:5005"
-
-                });*/
+            tokenResponse = await client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
+            {
+                Address = discovery.TokenEndpoint,
+                ClientId = "client-code",
+                ClientSecret = "secret",
+                Code = "12",
+                RedirectUri = "https://192.168.2.102:5005"
+            });
 
 
             if (tokenResponse.IsError)

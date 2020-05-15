@@ -38,16 +38,18 @@ namespace NC.MicroService.IdentityClient
                     .AddOpenIdConnect("oidc", options =>
                     {
                         // 1. 生成id_token
-                        options.Authority = "https://192.168.2.102:5005";    // 受信任令牌服务地址
-                        options.RequireHttpsMetadata = false;
+                        options.Authority = "https://192.168.2.102:5005";    // 受信任令牌服务地址，授权地址
                         options.ClientId = "client-code";
                         options.ClientSecret = "secret";
                         options.ResponseType = "code";
                         options.SaveTokens = true;  // 用于将来自IdentityServer的令牌保留在cookie中
 
-                        // 1. 添加授权访问api的支持(access_token)
+                        // 2. 添加授权访问api的支持(access_token)
                         options.Scope.Add("TeamService");
                         options.Scope.Add("offline_access");
+
+                        options.RequireHttpsMetadata = true;
+                        options.BackchannelHttpHandler = GetHandler();
                     });
 
 
@@ -67,6 +69,19 @@ namespace NC.MicroService.IdentityClient
             services.AddControllersWithViews();
         }
 
+        /// <summary>
+        /// 自定义 HttpClientHandler ，避开证书验证问题：IdentityServer4 HTTPS IDX20804 IDX20803
+        /// </summary>
+        /// <returns></returns>
+        private static HttpClientHandler GetHandler()
+        {
+            var handler = new HttpClientHandler();
+            //handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            //handler.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+            return handler;
+        }
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -80,11 +95,6 @@ namespace NC.MicroService.IdentityClient
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            //System.Net.ServicePointManager.Expect100Continue = true;
-            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls
-            //| System.Net.SecurityProtocolType.Tls11
-            //| System.Net.SecurityProtocolType.Tls12;
 
             app.UseHttpsRedirection();
 
@@ -102,7 +112,7 @@ namespace NC.MicroService.IdentityClient
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}"); // .RequireAuthorization();
+                    pattern: "{controller=Home}/{action=Index}/{id?}").RequireAuthorization(); // openid 模式，跳转授权
             });
         }
     }

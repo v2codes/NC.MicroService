@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Consul;
 using IdentityServer4.AccessTokenValidation;
@@ -51,16 +52,30 @@ namespace NC.MicroService.TeamService
             // 5. 注册Consul注册服务
             services.AddConsulRegistry(Configuration);
 
-            // 6、校验AccessToken,从身份校验中心进行校验
+            // 6. 校验AccessToken,从身份校验中心进行校验
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                     .AddIdentityServerAuthentication(options =>
                     {
-                        options.Authority = "https://192.168.2.102:5005"; // 1、授权中心地址
-                        options.ApiName = "TeamService"; // 2、api名称(项目具体名称)
-                        options.RequireHttpsMetadata = false; // 3、https元数据，不需要
+                        options.Authority = "https://192.168.2.102:5005"; // 1. 授权中心地址
+                        options.ApiName = "TeamService"; // 2. api名称(项目具体名称)
+                        options.RequireHttpsMetadata = true; // 3. https元数据，不需要
+                        options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
                     });
 
             services.AddControllers();
+        }
+
+        /// <summary>
+        /// 自定义 HttpClientHandler ，避开证书验证问题：IdentityServer4 HTTPS IDX20804 IDX20803
+        /// </summary>
+        /// <returns></returns>
+        private static HttpClientHandler GetHandler()
+        {
+            var handler = new HttpClientHandler();
+            //handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+            //handler.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+            return handler;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,11 +85,6 @@ namespace NC.MicroService.TeamService
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            //System.Net.ServicePointManager.Expect100Continue = true;
-            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls
-            //| System.Net.SecurityProtocolType.Tls11
-            //| System.Net.SecurityProtocolType.Tls12;
 
             app.UseHttpsRedirection();
 

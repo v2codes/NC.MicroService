@@ -35,8 +35,8 @@ namespace NC.MicroService.IdentityServer4
                     .AddDeveloperSigningCredential() // 用户登录配置，生产环境需要配置具体登录签名凭据
                     .AddInMemoryApiResources(IdentityServer4Config.GetApiResources()) // 存储API资源，此处使用了测试数据，
                     .AddInMemoryClients(IdentityServer4Config.GetClients())// 存储客户端（模式），配置允许访问IdentityServer4的客户端
-                    .AddTestUsers(IdentityServer4Config.GetUsers()) // 客户端用户
-                    .AddInMemoryIdentityResources(IdentityServer4Config.Ids); // openid 身份
+                    .AddTestUsers(IdentityServer4Config.GetUsers()) // 客户端用户，测试数据
+                    .AddInMemoryIdentityResources(IdentityServer4Config.Ids); // openid 身份资源，测试数据
 
             services.AddControllersWithViews();
         }
@@ -54,11 +54,6 @@ namespace NC.MicroService.IdentityServer4
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
-            //System.Net.ServicePointManager.Expect100Continue = true;
-            //System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls
-            //| System.Net.SecurityProtocolType.Tls11
-            //| System.Net.SecurityProtocolType.Tls12;
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

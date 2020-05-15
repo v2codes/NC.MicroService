@@ -36,17 +36,13 @@ namespace NC.MicroService.IdentityServer4
         {
             return new List<Client>()
             {
+                // 1. client认证模式
                 new Client
                 {
                     ClientId = "client",
-
-                    // 没有交互性用户，使用 clientid/secret 实现认证。
-                    // 1、client认证模式
-                    // 2、client用户密码认证模式
-                    // 3、授权码认证模式(code)
-                    // 4、简单认证模式(js)
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
 
+                    // 没有交互性用户，使用 clientid/secret 实现认证。
                     // 用于认证的密码
                     ClientSecrets =
                     {
@@ -55,6 +51,8 @@ namespace NC.MicroService.IdentityServer4
                     // 客户端有权访问的范围（Scopes）
                     AllowedScopes = { "TeamService","MemberService" }
                 },
+                
+                // 2. client用户密码认证模式
                 new Client
                 {
                     ClientId = "client-password",
@@ -62,13 +60,14 @@ namespace NC.MicroService.IdentityServer4
 	                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
 	                // 用于认证的密码
-	                ClientSecrets =
-                    {
+	                ClientSecrets = {
                         new Secret("secret".Sha256())
                     },
 	                // 客户端有权访问的范围（Scopes）
 	                AllowedScopes = { "TeamService" }
                 },
+                
+                // 3. 授权码认证模式(code)
                 // openid客户端
                 new Client
                 {
@@ -83,14 +82,17 @@ namespace NC.MicroService.IdentityServer4
                     PostLogoutRedirectUris={ "https://192.168.2.102:5006/signout-callback-oidc"},// 2、登录退出地址
 
                     AllowedScopes=new List<string>{
-                        IdentityServerConstants.StandardScopes.OpenId,
-                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OpenId, // 必须
+                        IdentityServerConstants.StandardScopes.Profile,// 可选
                         "TeamService" // 启用服务授权支持
                     },
 
                     // 增加授权访问
                     AllowOfflineAccess=true
                 }
+
+                // 4. 简单认证模式(js)
+                // TODO.....
             };
         }
 
@@ -104,19 +106,21 @@ namespace NC.MicroService.IdentityServer4
         };
 
         /// <summary>
-        /// 3. 测试用户
+        /// 3. 测试用户数据
         /// </summary>
         /// <returns></returns>
         public static List<TestUser> GetUsers()
         {
             return new List<TestUser>()
             {
+                // 用于测试用户密码认证模式
                 new TestUser
                 {
                     SubjectId="1",
                     Username="leo",
                     Password="123456"
                 },
+
                 // openid 身份验证
                 new TestUser{SubjectId = "818727", Username = "leo-1", Password = "123456",
                     Claims =

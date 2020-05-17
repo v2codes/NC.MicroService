@@ -13,7 +13,9 @@ using IdentityServer4.Test;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using NC.MicroService.IdentityServer4.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -29,27 +31,34 @@ namespace NC.MicroService.IdentityServer4.Controllers
     [AllowAnonymous]
     public class AccountController : Controller
     {
-        private readonly TestUserStore _users;
+        //private readonly TestUserStore _users;
         private readonly IIdentityServerInteractionService _interaction;
         private readonly IClientStore _clientStore;
         private readonly IAuthenticationSchemeProvider _schemeProvider;
         private readonly IEventService _events;
+
+        private UserManager<User> _userManager; // 1. 用户相关操作
+        private SignInManager<User> _signInManager; // 2. 登录相关操作
 
         public AccountController(
             IIdentityServerInteractionService interaction,
             IClientStore clientStore,
             IAuthenticationSchemeProvider schemeProvider,
             IEventService events,
-            TestUserStore users = null)
+            UserManager<User> userManager,
+            SignInManager<User> signInManager)
+        //TestUserStore users = null)
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
             // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
-            _users = users ?? new TestUserStore(TestUsers.Users);
+            //_users = users ?? new TestUserStore(TestUsers.Users);
 
             _interaction = interaction;
             _clientStore = clientStore;
             _schemeProvider = schemeProvider;
             _events = events;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         /// <summary>
@@ -71,109 +80,196 @@ namespace NC.MicroService.IdentityServer4.Controllers
         }
 
         /// <summary>
-        /// Handle postback from username/password login
+        /// 
         /// </summary>
+        /// <param name="model"></param>
+        /// <param name="button"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model, string button)
         {
-            // check if we are in the context of an authorization request
+            // 检查当前请求是否处于授权请求的上下文中
             var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
 
-            // the user clicked the "cancel" button
+            // 用户点击了 “cancel” 取消按钮，重定向访问地址
             if (button != "login")
             {
                 if (context != null)
                 {
-                    // if the user cancels, send a result back into IdentityServer as if they 
-                    // denied the consent (even if this client does not require consent).
-                    // this will send back an access denied OIDC error response to the client.
+                    // 如果用户取消，则将结果发送回IdentityServer，就像他们拒绝同意一样(即使此客户端不需要同意)。这将向客户端发回一个拒绝访问OIDC错误响应。
                     await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
 
-                    // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+                    // model.ReturnUrl 是可信的，因为GetAuthorizationContextAsync返回非空
                     if (await _clientStore.IsPkceClientAsync(context.ClientId))
                     {
-                        // if the client is PKCE then we assume it's native, so this change in how to
-                        // return the response is for better UX for the end user.
+                        // 如果客户端是PKCE，那么我们假设它是本地的，所以这种响应返回方式的改变是为了最终用户更好的于用户体验。
+                        // PKCE：https://oauth.net/2/pkce/
+                        // PKCE (RFC 7636)是授权代码流的扩展，以防止某些攻击，并能够安全地执行来自公共客户端的OAuth交换。
+                        // 它主要用于移动和JavaScript应用程序，但该技术也可以应用于任何客户机。
+                        // 利用授权码授权的OAuth 2.0公共客户端容易受到授权码拦截攻击。该规范描述了攻击以及一种通过使用代码交换的Proof Key (PKCE，发音为“pixy”)来减轻威胁的技术。
                         return this.LoadingPage("Redirect", model.ReturnUrl);
                     }
 
                     return Redirect(model.ReturnUrl);
                 }
-                else
-                {
-                    // since we don't have a valid context, then we just go back to the home page
-                    return Redirect("~/");
-                }
+
+                // 如果没有有效的上下文，返回到主页
+                return Redirect("~/");
             }
 
+            // 登录核心逻辑
             if (ModelState.IsValid)
             {
-                // validate username/password against in-memory store
-                if (_users.ValidateCredentials(model.Username, model.Password))
+                // 验证用户名是否存在
+                var user = await _userManager.FindByNameAsync(model.Username);
+                if (user == null)
                 {
-                    var user = _users.FindByUsername(model.Username);
-                    await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username, clientId: context?.ClientId));
-
-                    // only set explicit expiration here if user chooses "remember me". 
-                    // otherwise we rely upon expiration configured in cookie middleware.
-                    AuthenticationProperties props = null;
-                    if (AccountOptions.AllowRememberLogin && model.RememberLogin)
+                    ModelState.AddModelError(nameof(model.Username), $"用户名{model.Username} 不存在");
+                }
+                else
+                {
+                    // 验证密码是否一致
+                    if (await _userManager.CheckPasswordAsync(user, model.Password))
                     {
-                        props = new AuthenticationProperties
+                        AuthenticationProperties props = null;
+                        if (model.RememberLogin)
                         {
-                            IsPersistent = true,
-                            ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
-                        };
-                    };
-
-                    // issue authentication cookie with subject ID and username
-                    var isuser = new IdentityServerUser(user.SubjectId)
-                    {
-                        DisplayName = user.Username
-                    };
-
-                    await HttpContext.SignInAsync(isuser, props);
-
-                    if (context != null)
-                    {
-                        if (await _clientStore.IsPkceClientAsync(context.ClientId))
-                        {
-                            // if the client is PKCE then we assume it's native, so this change in how to
-                            // return the response is for better UX for the end user.
-                            return this.LoadingPage("Redirect", model.ReturnUrl);
+                            props = new AuthenticationProperties
+                            {
+                                IsPersistent = true,
+                                ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(30))
+                            };
                         }
 
-                        // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
-                        return Redirect(model.ReturnUrl);
-                    }
+                        var idsUser = new IdentityServerUser(user.Id.ToString())
+                        {
+                            DisplayName = user.UserName
+                        };
 
-                    // request for a local page
-                    if (Url.IsLocalUrl(model.ReturnUrl))
-                    {
-                        return Redirect(model.ReturnUrl);
-                    }
-                    else if (string.IsNullOrEmpty(model.ReturnUrl))
-                    {
+                        await HttpContext.SignInAsync(idsUser, props);
+
+                        if (_interaction.IsValidReturnUrl(model.ReturnUrl))
+                        {
+                            return Redirect(model.ReturnUrl);
+                        }
                         return Redirect("~/");
                     }
-                    else
-                    {
-                        // user might have clicked on a malicious link - should be logged
-                        throw new Exception("invalid return URL");
-                    }
-                }
 
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
-                ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+                    ModelState.AddModelError(nameof(model.Password), "密码错误");
+                }
             }
 
-            // something went wrong, show form with error
+            // 输出异常信息
             var vm = await BuildLoginViewModelAsync(model);
             return View(vm);
         }
 
-        
+        #region 原 Login 方法
+        ///// <summary>
+        ///// Handle postback from username/password login
+        ///// </summary>
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Login(LoginInputModel model, string button)
+        //{
+        //    // check if we are in the context of an authorization request
+        //    var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
+
+        //    // the user clicked the "cancel" button
+        //    if (button != "login")
+        //    {
+        //        if (context != null)
+        //        {
+        //            // if the user cancels, send a result back into IdentityServer as if they 
+        //            // denied the consent (even if this client does not require consent).
+        //            // this will send back an access denied OIDC error response to the client.
+        //            await _interaction.GrantConsentAsync(context, ConsentResponse.Denied);
+
+        //            // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+        //            if (await _clientStore.IsPkceClientAsync(context.ClientId))
+        //            {
+        //                // if the client is PKCE then we assume it's native, so this change in how to
+        //                // return the response is for better UX for the end user.
+        //                return this.LoadingPage("Redirect", model.ReturnUrl);
+        //            }
+
+        //            return Redirect(model.ReturnUrl);
+        //        }
+        //        else
+        //        {
+        //            // since we don't have a valid context, then we just go back to the home page
+        //            return Redirect("~/");
+        //        }
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        // validate username/password against in-memory store
+        //        if (_users.ValidateCredentials(model.Username, model.Password))
+        //        {
+        //            var user = _users.FindByUsername(model.Username);
+        //            await _events.RaiseAsync(new UserLoginSuccessEvent(user.Username, user.SubjectId, user.Username, clientId: context?.ClientId));
+
+        //            // only set explicit expiration here if user chooses "remember me". 
+        //            // otherwise we rely upon expiration configured in cookie middleware.
+        //            AuthenticationProperties props = null;
+        //            if (AccountOptions.AllowRememberLogin && model.RememberLogin)
+        //            {
+        //                props = new AuthenticationProperties
+        //                {
+        //                    IsPersistent = true,
+        //                    ExpiresUtc = DateTimeOffset.UtcNow.Add(AccountOptions.RememberMeLoginDuration)
+        //                };
+        //            };
+
+        //            // issue authentication cookie with subject ID and username
+        //            var isuser = new IdentityServerUser(user.SubjectId)
+        //            {
+        //                DisplayName = user.Username
+        //            };
+
+        //            await HttpContext.SignInAsync(isuser, props);
+
+        //            if (context != null)
+        //            {
+        //                if (await _clientStore.IsPkceClientAsync(context.ClientId))
+        //                {
+        //                    // if the client is PKCE then we assume it's native, so this change in how to
+        //                    // return the response is for better UX for the end user.
+        //                    return this.LoadingPage("Redirect", model.ReturnUrl);
+        //                }
+
+        //                // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
+        //                return Redirect(model.ReturnUrl);
+        //            }
+
+        //            // request for a local page
+        //            if (Url.IsLocalUrl(model.ReturnUrl))
+        //            {
+        //                return Redirect(model.ReturnUrl);
+        //            }
+        //            else if (string.IsNullOrEmpty(model.ReturnUrl))
+        //            {
+        //                return Redirect("~/");
+        //            }
+        //            else
+        //            {
+        //                // user might have clicked on a malicious link - should be logged
+        //                throw new Exception("invalid return URL");
+        //            }
+        //        }
+
+        //        await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.ClientId));
+        //        ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
+        //    }
+
+        //    // something went wrong, show form with error
+        //    var vm = await BuildLoginViewModelAsync(model);
+        //    return View(vm);
+        //}
+        #endregion
+
         /// <summary>
         /// Show logout page
         /// </summary>

@@ -33,7 +33,7 @@ namespace NC.MicroService.IdentityServer4
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            #region 内存存储，用于简单功能性测试
+            #region 内存存储，用于功能性测试
             //// 1. IOC容器中添加 IdentityServer4
             //services.AddIdentityServer()
             //        .AddDeveloperSigningCredential() // 用户登录配置，生产环境需要配置具体登录签名凭据
@@ -104,7 +104,7 @@ namespace NC.MicroService.IdentityServer4
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // 初始化配置数据数据
-            //InitializeDatabase(app);
+            InitializeDatabase(app);
             // 初始化用户数据
             InitializeUserDatabase(app);
 
@@ -160,10 +160,10 @@ namespace NC.MicroService.IdentityServer4
 
                 if (!context.IdentityResources.Any())
                 {
-                    /*foreach (var resource in Config.Ids)
+                    foreach (var resource in IdentityServer4Config.Ids)
                     {
                         context.IdentityResources.Add(resource.ToEntity());
-                    }*/
+                    }
                     context.SaveChanges();
                 }
 

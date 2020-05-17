@@ -52,31 +52,31 @@ namespace NC.MicroService.TeamService
             // 5. 注册Consul注册服务
             services.AddConsulRegistry(Configuration);
 
-            // 6. 校验AccessToken,从身份校验中心进行校验
-            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                    .AddIdentityServerAuthentication(options =>
-                    {
-                        options.Authority = "https://192.168.2.102:5005"; // 1. 授权中心地址
-                        options.ApiName = "TeamService"; // 2. api名称(项目具体名称)
-                        options.RequireHttpsMetadata = true; // 3. https元数据，不需要
-                        options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
-                    });
+            //// 6.校验AccessToken,从身份校验中心进行校验-- > Ocelot 网关集成授权认证
+            //services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+            //        .AddIdentityServerAuthentication(options =>
+            //        {
+            //            options.Authority = "https://192.168.2.102:5005"; // 1. 授权中心地址
+            //            options.ApiName = "TeamService"; // 2. api名称(项目具体名称)
+            //            options.RequireHttpsMetadata = true; // 3. https元数据，不需要
+            //            options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
+            //        });
 
             services.AddControllers();
         }
 
-        /// <summary>
-        /// 自定义 HttpClientHandler ，避开证书验证问题：IdentityServer4 HTTPS IDX20804 IDX20803
-        /// </summary>
-        /// <returns></returns>
-        private static HttpClientHandler GetHandler()
-        {
-            var handler = new HttpClientHandler();
-            //handler.ClientCertificateOptions = ClientCertificateOption.Manual;
-            //handler.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
-            handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
-            return handler;
-        }
+        ///// <summary>
+        ///// 自定义 HttpClientHandler ，避开证书验证问题：IdentityServer4 HTTPS IDX20804 IDX20803
+        ///// </summary>
+        ///// <returns></returns>
+        //private static HttpClientHandler GetHandler()
+        //{
+        //    var handler = new HttpClientHandler();
+        //    //handler.ClientCertificateOptions = ClientCertificateOption.Manual;
+        //    //handler.SslProtocols = System.Security.Authentication.SslProtocols.Tls12;
+        //    handler.ServerCertificateCustomValidationCallback = (message, cert, chain, errors) => true;
+        //    return handler;
+        //}
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -93,8 +93,8 @@ namespace NC.MicroService.TeamService
 
             app.UseRouting();
 
-            // 1. 开启身份验证
-            app.UseAuthentication();
+            // 1. 开启身份验证 --> Ocelot 网关集成授权认证
+            //app.UseAuthentication();
 
             // 2. 使用授权
             app.UseAuthorization(); 

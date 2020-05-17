@@ -43,6 +43,12 @@
         "ExceptionsAllowedBeforeBreaking": 3, // 允许多少个异常请求
         "DurationOfBreak": 5, // 熔断的时间，单位为秒
         "TimeoutValue": 60000 // 如果下游请求的处理时间超过多少则自动将请求设置为超时
+      },
+
+      // 身份认证配置
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "OcelotKey",
+        "AllowedScopes": [] // 允许客户端范围  "memberservice", "teamserver"
       }
     }
   ],
@@ -50,7 +56,7 @@
   // 全局配置
   "GlobalConfiguration": {
     "ServiceDiscoveryProvider": {
-      "Host": "localhost",
+      "Host": "LL2019",
       "Port": 8500,
       "Type": "Consul"
     },

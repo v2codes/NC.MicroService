@@ -9,7 +9,7 @@ using NC.MicroService.AggregateService.Services;
 
 namespace NC.MicroService.AggregateService.Controllers
 {
-    [Route("api/TeamInfos")]
+    [Route("api/Teams")]
     [ApiController]
     public class AggregateController : ControllerBase
     {
@@ -28,7 +28,7 @@ namespace NC.MicroService.AggregateService.Controllers
             this._logger = logger;
         }
 
-        // GET: api/TeamInfos
+        // GET: /Teams
         [HttpGet]
         public async Task<ActionResult<List<Team>>> Get()
         {

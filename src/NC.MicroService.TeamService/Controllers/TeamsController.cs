@@ -13,7 +13,8 @@ using NC.MicroService.TeamService.Services;
 namespace NC.MicroService.TeamService.Controllers
 {
     [Route("Teams")]
-    [Authorize] // 1. 保护起来
+    //[Authorize] // 1. 保护起来 ==> 由网关统一处理授权
+    //[Authorize(Roles ="admin")] // 增加角色控制
     [ApiController]
     public class TeamsController : ControllerBase
     {
@@ -26,10 +27,10 @@ namespace NC.MicroService.TeamService.Controllers
             _logger = logger;
         }
 
-
         [HttpGet]
         public ActionResult<IEnumerable<Team>> GetTeams()
         {
+            Console.WriteLine("查询所有团队信息");
             // Thread.Sleep(10000000);
             // 1、演示宕机
             return _teamService.QueryAll();

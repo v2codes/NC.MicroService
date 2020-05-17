@@ -80,7 +80,7 @@ namespace NC.MicroService.IdentityServer4.Controllers
         }
 
         /// <summary>
-        /// 
+        /// 登录（持久化）
         /// </summary>
         /// <param name="model"></param>
         /// <param name="button"></param>
@@ -165,7 +165,7 @@ namespace NC.MicroService.IdentityServer4.Controllers
             return View(vm);
         }
 
-        #region 原 Login 方法
+        #region 原 Login 方法（内存存储测试）
         ///// <summary>
         ///// Handle postback from username/password login
         ///// </summary>

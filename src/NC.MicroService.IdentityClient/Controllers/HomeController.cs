@@ -58,7 +58,10 @@ namespace NC.MicroService.IdentityClient.Controllers
                 //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
                 // 2、使用token
-                var result = await client.GetStringAsync("https://192.168.2.102:5001/teams");
+                // 直接访问teamservice
+                // var result = await client.GetStringAsync("https://192.168.2.102:5001/teams");
+                // 集成ocelot网关
+                var result = await client.GetStringAsync("https://192.168.2.102:5004/ocelot/teams");
 
                 // 3、响应结果到页面
                 ViewData.Add("Json", result);
@@ -115,7 +118,7 @@ namespace NC.MicroService.IdentityClient.Controllers
             //    Password = "123456"
             //});
 
-            // 1.3 通过授权code获取AccessToken[需要进行登录]
+            // 1.3 通过授权code获取AccessToken[需要进行登录] --> 刷新token client.RequestRefreshTokenAsync(xxx)
             tokenResponse = await client.RequestAuthorizationCodeTokenAsync(new AuthorizationCodeTokenRequest
             {
                 Address = discovery.TokenEndpoint,
@@ -158,7 +161,10 @@ namespace NC.MicroService.IdentityClient.Controllers
         {
             var apiClient = _httpClientFactory.CreateClient("disableHttpsValidation");
             apiClient.SetBearerToken(AccessToken); // 1、设置token到请求头
-            HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.102:5001/teams");
+            // 直接访问teamservice
+            //HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.102:5001/teams");
+            // 集成ocelot网关
+            HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.102:5004/ocelot/teams");
 
             if (!response.IsSuccessStatusCode)
             {

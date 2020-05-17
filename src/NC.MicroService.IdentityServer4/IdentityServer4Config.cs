@@ -24,6 +24,8 @@ namespace NC.MicroService.IdentityServer4
             return new List<ApiResource>
             {
                 new ApiResource("TeamService", "TeamService api需要被保护")
+                // 角色控制，TeamService增加角色控制策略
+                // new ApiResource("TeamService", "TeamService api需要被保护",new List<string>{"role","admin"})
             };
         }
 

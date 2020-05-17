@@ -38,7 +38,7 @@
   // 全局配置
   "GlobalConfiguration": {
     "ServiceDiscoveryProvider": {
-      "Host": "localhost",
+      "Host": "LL2019",
       "Port": 8500,
       "Type": "Consul"
     },

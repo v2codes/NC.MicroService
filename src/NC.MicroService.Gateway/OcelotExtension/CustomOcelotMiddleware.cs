@@ -17,11 +17,12 @@ namespace NC.MicroService.Gateway.OcelotExtension
         public CustomOcelotMiddleware(OcelotRequestDelegate next, IOcelotLoggerFactory loggerFactory)
             : base(loggerFactory.CreateLogger<CustomOcelotMiddleware>())
         {
+            this._next = next;
         }
 
         public async Task Invoke(DownstreamContext context)
         {
-            if (!context.IsError&&context.HttpContext.Request.Method.ToUpper()!="OPTIONS")
+            if (!context.IsError && context.HttpContext.Request.Method.ToUpper() != "OPTIONS")
             {
                 Console.WriteLine("======》 自定义中间件");
                 Console.WriteLine("======》 自定义业务逻辑处理");

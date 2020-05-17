@@ -53,7 +53,7 @@ namespace NC.MicroService.Infrastructure.Consul
             var service = _loadBalance.Select(serviceList);
 
             // 3. 请求服务
-            var httpClient = _httpClientFactory.CreateClient("micro");
+            var httpClient = _httpClientFactory.CreateClient("ConsulHttpClient");
             //var response = await httpClient.GetAsync($"{service.Url}{requirePath}");//TODO：Ocelot结合Consul会出错，注意Scheme.
             var response = await httpClient.GetAsync($"{serviceScheme}://{service.Url}{requirePath}");
 

@@ -51,7 +51,7 @@ namespace NC.MicroService.Gateway
 
             //services.AddOcelot().AddConsul(); // 注册 Ocelot，结合 Consul，实现动态路由
 
-            services.AddOcelot().AddConsul().AddPolly(); // 注册 Ocelot，结合 Consul 实现动态路由，结合 Polly 实现熔断/降级。
+            services.AddOcelot(Configuration).AddConsul().AddPolly(); // 注册 Ocelot，结合 Consul 实现动态路由，结合 Polly 实现熔断/降级。
         }
 
         /// <summary>

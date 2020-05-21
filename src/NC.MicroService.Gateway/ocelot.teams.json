@@ -1,17 +1,33 @@
 {
   "ReRoutes": [ // 单路由示例
     {
+      "key": "teams",
+
       // 上游配置
-      "UpstreamPathTemplate": "/ocelot/aggregate", // 上游也就是用户输入的请求Url模板 
-      "UpstreamHttpMethod": [ "Get" ], // 上游请求http方法，可使用数组
+      "UpstreamPathTemplate": "/ocelot/teams", // 上游也就是用户输入的请求Url模板
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ], // 上游请求http方法，可使用数组
       // 下游配置
-      "DownstreamPathTemplate": "/api/TeamInfos", // 下游路径模板
+      "DownstreamPathTemplate": "/Teams", // 下游路径模板
       "DownstreamScheme": "https", // 下游服务http schema
 
-      // 动态路由：Consul
-      "Servicename": "AggregateService",
+      // 固定服务节点
+      //"DownstreamHostAndPorts": [ // 下游服务的地址，如果是集群这里可以填多项，再配置LoadBalancer的话
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 5003
+      //  },
+      //  {
+      //    "Host": "localhost",
+      //    "Port": 5005
+      //  }
+      //],
 
-      "LoadBalancerOptions": { // 负载均衡
+      // 动态获取服务节点：Consul
+      "ServiceName": "TeamService",
+      "UseServiceDiscovery": true,
+
+      // 负载均衡
+      "LoadBalancerOptions": {
         "Type": "LeastConnection" // 算法之一：把新请求发送到现有请求最少的服务上
       },
 
@@ -29,7 +45,16 @@
         "ExceptionsAllowedBeforeBreaking": 3, // 允许多少个异常请求
         "DurationOfBreak": 5, // 熔断的时间，单位为秒
         "TimeoutValue": 60000 // 如果下游请求的处理时间超过多少则自动将请求设置为超时
-      }
+      },
+
+      // 身份认证配置
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "OcelotKey",
+        "AllowedScopes": [] // 允许客户端范围  "memberservice", "teamserver"
+      },
+
+      // 忽略SSL证书校验
+      "DangerousAcceptAnyServerCertificateValidator": true
     }
   ],
 

@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.MicroService.AggregateSe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.MicroService.Gateway", "NC.MicroService.Gateway\NC.MicroService.Gateway.csproj", "{4287E49C-8673-4723-9279-501B2E52EDF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NC.MicroService.IdentityServer4", "NC.MicroService.IdentityServer4\NC.MicroService.IdentityServer4.csproj", "{4C62154E-C4E7-4580-96B3-2D14C8902CDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.MicroService.IdentityServer4", "NC.MicroService.IdentityServer4\NC.MicroService.IdentityServer4.csproj", "{4C62154E-C4E7-4580-96B3-2D14C8902CDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NC.MicroService.IdentityClient", "NC.MicroService.IdentityClient\NC.MicroService.IdentityClient.csproj", "{01904B74-F3A9-4CB1-80A2-F8E24F5520FE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NC.MicroService.IdentityClient", "NC.MicroService.IdentityClient\NC.MicroService.IdentityClient.csproj", "{01904B74-F3A9-4CB1-80A2-F8E24F5520FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

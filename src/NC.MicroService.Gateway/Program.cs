@@ -27,7 +27,6 @@ namespace NC.MicroService.Gateway
                     {
                         // 1. 加载 ocelot 配置文件
                         //config.AddJsonFile("ocelot.json");
-
                         // 2. 多路由配置
                         config.SetBasePath(hostingContext.HostingEnvironment.ContentRootPath)
                                .AddJsonFile("appsettings.json", true, true)

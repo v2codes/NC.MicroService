@@ -104,7 +104,7 @@ namespace NC.MicroService.IdentityClient.Controllers
             //    Address = discovery.TokenEndpoint, // 1、生成AccessToken中心
             //    ClientId = "client", // 2、客户端编号
             //    ClientSecret = "secret",// 3、客户端密码
-            //    Scope = "TeamService" // 4、客户端需要访问的API
+            //    Scope = "TeamService,MemberService" // 4、客户端需要访问的API
             //});
 
             // 1.2 通过客户端用户密码获取 AccessToken

@@ -1,26 +1,27 @@
-{
-  "ReRoutes": [
-  ],
-  "Aggregates": [
-    {
-      "ReRouteKeys": [
-        "members",
-        "teams"
-      ],
-      "UpstreamPathTemplate": "/ocelot/common"
-    }
-  ],
-  "GlobalConfiguration": {
-    "ServiceDiscoveryProvider": {
-      "Host": "LL2019",
-      "Port": 8500,
-      "Type": "Consul"
-    },
-    "RateLimitOptions": {
-      "DisableRateLimitHeaders": false,
-      "QuotaExceededMessage": "ruanmou test!",
-      "HttpStatusCode": 999,
-      "ClientIdHeader": "Test"
-    }
-  }
-}
+//{
+//  "ReRoutes": [
+//  ],
+//  "Aggregates": [
+//    {
+//      "ReRouteKeys": [
+//        "members",
+//        "teams"
+//      ],
+//      "UpstreamPathTemplate": "/ocelot/common"
+//    }
+//  ],
+//  "GlobalConfiguration": {
+//    "ServiceDiscoveryProvider": {
+//      "Host": "LL2019",
+//      "Port": 8500,
+//      "Type": "Consul"
+//    },
+//    "RateLimitOptions": {
+//      "ClientIdHeader": "Test", // 用来识别客户端的请求头，默认是 ClientId
+//      "DisableRateLimitHeaders": false, // Http头  X-Rate-Limit 和 Retry-After 是否禁用
+//      "RateLimitCounterPrefix": "ocelot", // ？？？
+//      "QuotaExceededMessage": "ruanmou test!", // "访问被拒绝，因为，加了限流处理！！！！", // 当请求过载被截断时返回的消息
+//      "HttpStatusCode": 429 // 当请求过载被截断时返回的http status
+//    }
+//  }
+//}

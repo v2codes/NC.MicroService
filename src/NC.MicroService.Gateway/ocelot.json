@@ -1,0 +1,61 @@
+{
+  "ReRoutes": [],
+  "Aggregate": [],
+  "DynamicReRoutes": [
+    {
+      "ServiceName": "TeamService",
+      "RateLimitRule": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "1s",
+        "PeriodTimespan": 3000,
+        "Limit": 3
+      }
+    }
+  ],
+  "GlobalConfiguration": {
+    "RequestIdKey": null,
+    // Consul 服务发现地址
+    "ServiceDiscoveryProvider": {
+      "Host": "LL2019",
+      "Port": 8500,
+      "Type": "Consul"
+    },
+    // 下游 http scheme
+    "DownstreamScheme": "https",
+    "HttpHandlerOptions": {
+      "AllowAutoRedirect": false,
+      "UseCookieContainer": false,
+      "UseTracing": false
+    },
+    "BaseUrl": null,
+    // 负载均衡
+    "LoadBalancerOptions": {
+      "Type": "LeastConnection", // 算法之一：把新请求发送到现有请求最少的服务上
+      "Key": null,
+      "Expiry": 0
+    },
+    // 熔断、降级
+    "QoSOptions": {
+      "ExceptionsAllowedBeforeBreaking": 3, // 允许多少个异常请求
+      "DurationOfBreak": 5, // 熔断的时间，单位为秒
+      "TimeoutValue": 60000 // 如果下游请求的处理时间超过多少则自动将请求设置为超时
+    },
+    // 限流
+    "RateLimitOptions": {
+      "DisableRateLimitHeaders": false, // Http头  X-Rate-Limit 和 Retry-After 是否禁用
+      "QuotaExceededMessage": "RateLimitOptions test!", // "访问被拒绝，因为，加了限流处理！！！！", // 当请求过载被截断时返回的消息
+      "HttpStatusCode": 999, // 当请求过载被截断时返回的http status
+      "ClientIdHeader": "Test" // 用来识别客户端的请求头，默认是 ClientId
+    },
+
+    // 身份认证配置
+    "AuthenticationOptions": {
+      "AuthenticationProviderKey": "OcelotKey",
+      "AllowedScopes": [] // 允许客户端范围  "memberservice", "teamserver"
+    },
+
+    // 忽略SSL证书校验
+    "DangerousAcceptAnyServerCertificateValidator": true
+  }
+}

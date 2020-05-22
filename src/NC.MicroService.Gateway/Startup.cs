@@ -40,7 +40,7 @@ namespace NC.MicroService.Gateway
             //  // 在这个方法中，第一个参数 authenticationScheme，就可以告诉网关哪个服务需要身份授权校验，，TODO... 
             //  .AddIdentityServerAuthentication("OcelotKey", options =>
             //  {
-            //      options.Authority = "https://192.168.2.102:5005"; // 1. 授权中心地址
+            //      options.Authority = "https://192.168.2.105:5005"; // 1. 授权中心地址
             //      options.ApiName = "OcelotService"; // 2. api名称(项目具体名称)，注意数据库中的 apiresource表对应
             //      options.RequireHttpsMetadata = true; // 3. https元数据，不需要
             //      options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
@@ -61,7 +61,7 @@ namespace NC.MicroService.Gateway
                   options.Authority = identityServerOptions.AuthorityAddress; // 1. 授权中心地址
                   options.ApiName = identityServerOptions.ResourceName; // 2. api名称(项目具体名称)，注意数据库中的 apiresource表对应
                   options.RequireHttpsMetadata = true; // 3. https元数据，不需要
-                  options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
+                  options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler
               });
             #endregion
 
@@ -71,7 +71,8 @@ namespace NC.MicroService.Gateway
 
             //services.AddOcelot().AddConsul(); // 注册 Ocelot，结合 Consul，实现动态路由
 
-            services.AddOcelot(Configuration).AddConsul().AddPolly(); // 注册 Ocelot，结合 Consul 实现动态路由，结合 Polly 实现熔断/降级。
+            services.AddOcelot(Configuration).AddConsul().AddPolly()
+                    .AddDelegatingHandler<IgnoreSSLValidateDelegatingHandler>(true); // 注册 Ocelot，结合 Consul 实现动态路由，结合 Polly 实现熔断/降级。
         }
 
         /// <summary>

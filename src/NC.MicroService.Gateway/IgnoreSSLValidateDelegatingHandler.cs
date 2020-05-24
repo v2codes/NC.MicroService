@@ -13,7 +13,7 @@ namespace NC.MicroService.Gateway
     /// </summary>
     public class IgnoreSSLValidateDelegatingHandler : DelegatingHandler
     {
-        private readonly X509CertificateCollection _certificates = new X509CertificateCollection();
+        //private readonly X509CertificateCollection _certificates = new X509CertificateCollection();
 
         public IgnoreSSLValidateDelegatingHandler()
         {

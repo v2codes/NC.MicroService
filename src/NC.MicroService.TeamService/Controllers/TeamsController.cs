@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NC.MicroService.TeamService.Domain;
+using NC.MicroService.TeamService.EntityFrameworkCore;
 using NC.MicroService.TeamService.Services;
 
 namespace NC.MicroService.TeamService.Controllers
@@ -19,18 +21,42 @@ namespace NC.MicroService.TeamService.Controllers
     public class TeamsController : ControllerBase
     {
         private ITeamService _teamService;
-        private readonly ILogger<TeamsController> _logger;
+        private readonly IConfiguration _configuration;
+        private readonly CoreContext _dbContext;
 
-        public TeamsController(ITeamService teamService, ILogger<TeamsController> logger)
+        public TeamsController(ITeamService teamService,
+                               IConfiguration configuration, // 演示查看配置中心是否正常
+                               CoreContext dbContext) // 演示动态数据库链接设置
         {
             _teamService = teamService;
-            _logger = logger;
+            this._configuration = configuration;
+            this._dbContext = dbContext;
         }
 
         [HttpGet]
         public ActionResult<IEnumerable<Team>> GetTeams()
         {
             Console.WriteLine("查询所有团队信息");
+
+            #region 配置中心测试相关
+            //// 1. 配置获取
+            //Console.WriteLine($"配置中心配置项：Leo-Test={_configuration["Leo-Test"]}");
+            //// 2. 动态设置数据连接
+            //_dbContext.Database.GetDbConnection().ConnectionString = _configuration.GetConnectionString("DefaultConnection");
+            //// 3. 使用场景，缓存配置开关、服务降级
+            //var useCache = _configuration["UseCache"];
+            //if (useCache == "true")
+            //{
+            //    // 使用缓存，dosomething...
+            //    return new List<Team>();
+            //}
+            //else
+            //{
+            //    // 不使用缓存，dosomething...
+            //    return _teamService.QueryAll();
+            //}
+            #endregion
+
             // Thread.Sleep(10000000);
             // 1、演示宕机
             return _teamService.QueryAll();

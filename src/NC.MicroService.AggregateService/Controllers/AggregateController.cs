@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NC.MicroService.AggregateService.Domain;
 using NC.MicroService.AggregateService.Services;
@@ -17,15 +18,15 @@ namespace NC.MicroService.AggregateService.Controllers
         private readonly ITeamServiceClient _teamServiceClient;
         private readonly IMemberServiceClient _memberServiceClient;
 
-        private readonly ILogger<AggregateController> _logger;
+        private readonly IConfiguration _configuration;
 
         public AggregateController(ITeamServiceClient teamServiceClient,
                                    IMemberServiceClient memberServicesClient,
-                                   ILogger<AggregateController> logger)
+                                   IConfiguration configuration) // 演示查看配置中心是否正常 
         {
             this._teamServiceClient = teamServiceClient;
             this._memberServiceClient = memberServicesClient;
-            this._logger = logger;
+            this._configuration = configuration;
         }
 
         // GET: /Teams
@@ -33,6 +34,34 @@ namespace NC.MicroService.AggregateService.Controllers
         public async Task<ActionResult<List<Team>>> Get()
         {
             Console.WriteLine($"查询团队成员消息");
+
+            #region 配置中心测试相关
+            //// 1. 配置获取
+            //Console.WriteLine($"配置中心配置项：Leo-Test={_configuration["Leo-Test"]}");
+            //// 2. 动态设置数据连接
+            //_dbContext.Database.GetDbConnection().ConnectionString = _configuration.GetConnectionString("DefaultConnection");
+            //// 3. 使用场景，缓存配置开关、服务降级
+            //var useCache = _configuration["UseCache"];
+            //if (useCache == "true")
+            //{
+            //    // 使用缓存，dosomething...
+            //    return Ok(new List<Team>());
+            //}
+            //else
+            //{
+            //    // 不使用缓存，dosomething...
+            //    // 1、查询团队
+            //    IList<Team> teams = await _teamServiceClient.GetTeams();
+            //    // 2、查询团队成员
+            //    foreach (var team in teams)
+            //    {
+            //        IList<Member> members = await _memberServiceClient.GetMembersByTeamId(team.Id);
+            //        team.Members = members;
+            //    }
+            //    return Ok(teams);
+            //}
+            #endregion
+
             // 1、查询团队
             IList<Team> teams = await _teamServiceClient.GetTeams();
 

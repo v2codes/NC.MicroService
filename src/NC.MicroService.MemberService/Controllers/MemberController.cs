@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NC.MicroService.MemberService.Domain;
 using NC.MicroService.MemberService.Services;
@@ -15,12 +16,13 @@ namespace NC.MicroService.MemberService.Controllers
     public class MemberController : ControllerBase
     {
         private readonly IMemberService _memberService;
-        private readonly ILogger<MemberController> _logger;
+        private readonly IConfiguration _configuration;
 
-        public MemberController(IMemberService memberService, ILogger<MemberController> logger)
+        public MemberController(IMemberService memberService,
+                                IConfiguration configuration) // 演示查看配置中心是否正常 
         {
             _memberService = memberService;
-            _logger = logger;
+            _configuration = configuration;
         }
 
         /// <summary>
@@ -31,6 +33,26 @@ namespace NC.MicroService.MemberService.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Member>> GetMembers(Guid teamId)
         {
+
+            #region 配置中心测试相关
+            //// 1. 配置获取
+            //Console.WriteLine($"配置中心配置项：Leo-Test={_configuration["Leo-Test"]}");
+            //// 2. 动态设置数据连接
+            //_dbContext.Database.GetDbConnection().ConnectionString = _configuration.GetConnectionString("DefaultConnection");
+            //// 3. 使用场景，缓存配置开关、服务降级
+            //var useCache = _configuration["UseCache"];
+            //if (useCache == "true")
+            //{
+            //    // 使用缓存，dosomething...
+            //    return new List<Member>();
+            //}
+            //else
+            //{
+            //    // 不使用缓存，dosomething...
+            //    return _memberService.QueryAll();
+            //}
+            #endregion
+
             if (teamId == null || teamId == Guid.Empty)
             {
                 return _memberService.QueryAll();

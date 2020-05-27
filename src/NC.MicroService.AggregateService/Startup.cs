@@ -100,19 +100,29 @@ namespace NC.MicroService.AggregateService
             //// 1. 注入 Consul HttpClient，该注册扩展方法中包含了 Consul服务发现、负载均衡服务注册 --> 省却2、3步骤
             //services.AddHttpClient().AddConsulClient<ConsulHttpClient>();
 
-            /*// 2、注册
+            /*// 2. 注册
             services.AddConsulDiscovery();
-            // 3、注册负载均衡
+            // 3. 注册负载均衡
             services.AddSingleton<ILoadBalance, RandomLoadBalance>();*/
 
-            // 4、注册team服务
+            // 4. 注册team服务
             services.AddSingleton<ITeamServiceClient, TeamServiceHttpClient>();
 
-            // 5、注册成员服务
+            // 5. 注册成员服务
             services.AddSingleton<IMemberServiceClient, MemberServiceHttpClient>();
 
             // 6. 注册 Consul服务注册
             services.AddConsulRegistry(Configuration);
+
+            // 6. 校验AccessToken,从身份校验中心进行校验 --> 参加 TeamService
+
+            //// 7. 注册Saga分布式事务
+            //services.AddOmegaCore(options =>
+            //{
+            //    options.GrpcServerAddress = "LL2019:8080"; // 7.1 协调中心地址 alpha
+            //    options.InstanceId = "AggregateService-ID"; // 7.2 服务实例ID -- 用于集群
+            //    options.ServiceName = "AggregateService"; // 7.3 服务名称
+            //});
 
             services.AddControllers();
         }

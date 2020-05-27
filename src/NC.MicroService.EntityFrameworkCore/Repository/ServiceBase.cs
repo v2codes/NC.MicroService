@@ -15,7 +15,7 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
     /// <typeparam name="TKey"></typeparam>
     public abstract class ServiceBase<T, TKey> : IService<T, TKey> where T : class, IEntity<TKey>
     {
-        private readonly IRepository<T, TKey> _repository;
+        protected readonly IRepository<T, TKey> _repository;
         public ServiceBase(IRepository<T, TKey> repository)
         {
             this._repository = repository;
@@ -42,6 +42,10 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
         #endregion
 
         #region Delete
+        public virtual int Delete(T entity)
+        {
+            return _repository.Delete(entity);
+        }
         public virtual int Delete(TKey key)
         {
             return _repository.Delete(key);

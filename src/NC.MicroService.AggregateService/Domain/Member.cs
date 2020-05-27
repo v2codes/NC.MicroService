@@ -24,5 +24,10 @@ namespace NC.MicroService.AggregateService.Domain
         /// 成员昵称
         /// </summary>
         public string NickName { get; set; }
+
+        /// <summary>
+        /// 团队ID
+        /// </summary>
+        public Guid? TeamId { set; get; }
     }
 }

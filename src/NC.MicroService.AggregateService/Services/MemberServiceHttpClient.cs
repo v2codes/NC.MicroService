@@ -37,12 +37,23 @@ namespace NC.MicroService.AggregateService.Services
         public async Task<IList<Member>> GetMembersByTeamId(Guid teamId)
         {
             //// 1. 设置参数链接
-            //string url = $"{_requirePath}?teamId={teamId}";
+            string url = $"{_requirePath}/{teamId}";
 
             // 2. 请求服务
-            var members = await _consulHttpClient.GetAsync<List<Member>>(_serviceScheme, _serviceName, _requirePath);
+            var members = await _consulHttpClient.GetAsync<List<Member>>(_serviceScheme, _serviceName, url);
 
             return members;
+        }
+
+        /// <summary>
+        /// 添加成员信息
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public async Task InsertAsync(Member member)
+        {
+            string url = $"{_requirePath}/{member.TeamId}";
+            await _consulHttpClient.Post<Member>(_serviceScheme, _serviceName, url, member);
         }
     }
 }

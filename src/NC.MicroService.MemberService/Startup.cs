@@ -42,11 +42,21 @@ namespace NC.MicroService.MemberService
             // 3. 注册成员仓储
             services.AddScoped<IMemberRepository, MemberRepository>();
 
-            // 4、添加映射
+            // 4. 添加映射
             //services.AddAutoMapper();
 
-            // 5、添加服务注册条件
+            // 5. 添加服务注册条件
             services.AddConsulRegistry(Configuration);
+
+            // 6. 校验AccessToken,从身份校验中心进行校验 --> 参加 TeamService
+
+            //// 7. 注册Saga分布式事务
+            //services.AddOmegaCore(options =>
+            //{
+            //    options.GrpcServerAddress = "LL2019:8080"; // 7.1 协调中心地址 alpha
+            //    options.InstanceId = "MemberService-ID"; // 7.2 服务实例ID -- 用于集群
+            //    options.ServiceName = "MemberService"; // 7.3 服务名称
+            //});
 
             services.AddControllers();
         }

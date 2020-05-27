@@ -23,6 +23,7 @@ namespace NC.MicroService.EntityFrameworkCore.Repository
 
         #region Delete
         int Delete(TKey key);
+        int Delete(T entity);
         int Delete(Expression<Func<T, bool>> @where);
         Task<int> DeleteAsync(Expression<Func<T, bool>> @where);
         //int DeleteBySql(string sql);

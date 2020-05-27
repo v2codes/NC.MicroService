@@ -11,6 +11,16 @@ namespace NC.MicroService.AggregateService.Services
     /// </summary>
     public interface ITeamServiceClient
     {
+        /// <summary>
+        /// 查询所有团队信息
+        /// </summary>
+        /// <returns></returns>
         Task<IList<Team>> GetTeams();
+
+        /// <summary>
+        /// 添加团队信息
+        /// </summary>
+        /// <param name="team"></param>
+        Task InsertAsync(Team team);
     }
 }

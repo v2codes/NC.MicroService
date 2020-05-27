@@ -18,5 +18,15 @@ namespace NC.MicroService.MemberService.Services
         {
 
         }
+
+        /// <summary>
+        /// saga事务参与者 Compensable撤销业务 逻辑
+        /// </summary>
+        /// <param name="team"></param>
+        //[Compensable(nameof(Delete))]
+        public override async Task<int> InsertAsync(Member entity)
+        {
+            return await _repository.InsertAsync(entity);
+        }
     }
 }

@@ -62,6 +62,14 @@ namespace NC.MicroService.TeamService
             //            options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
             //        });
 
+            //// 7. 注册Saga分布式事务
+            //services.AddOmegaCore(options =>
+            //{
+            //    options.GrpcServerAddress = "LL2019:8080"; // 7.1 协调中心地址 alpha
+            //    options.InstanceId = "TeamService-ID"; // 7.2 服务实例ID -- 用于集群
+            //    options.ServiceName = "TeamService"; // 7.3 服务名称
+            //});
+
             services.AddControllers();
         }
 
@@ -97,7 +105,7 @@ namespace NC.MicroService.TeamService
             //app.UseAuthentication();
 
             // 2. 使用授权
-            app.UseAuthorization(); 
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

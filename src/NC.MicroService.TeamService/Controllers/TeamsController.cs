@@ -33,6 +33,10 @@ namespace NC.MicroService.TeamService.Controllers
             this._dbContext = dbContext;
         }
 
+        /// <summary>
+        /// 获取所有团队信息
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<IEnumerable<Team>> GetTeams()
         {
@@ -62,9 +66,13 @@ namespace NC.MicroService.TeamService.Controllers
             return _teamService.QueryAll();
         }
 
-        // GET: api/Teams/5
-        [HttpGet("{id}")]
-        public ActionResult<Team> GetTeam(Guid id)
+        /// <summary>
+        /// 根据ID获取团队信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/Teams/{id}")]
+        public ActionResult<Team> GetTeam([FromRoute]Guid id)
         {
             var team = _teamService.Find(id);
 
@@ -75,11 +83,14 @@ namespace NC.MicroService.TeamService.Controllers
             return team;
         }
 
-        // PUT: api/Teams/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public IActionResult PutTeam(Guid id, Team team)
+       /// <summary>
+       /// 更新团队
+       /// </summary>
+       /// <param name="id"></param>
+       /// <param name="team"></param>
+       /// <returns></returns>
+        [HttpPut("/Teams/{id}")]
+        public IActionResult PutTeam([FromRoute]Guid id, [FromBody]Team team)
         {
             if (id != team.Id)
             {
@@ -102,23 +113,29 @@ namespace NC.MicroService.TeamService.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok("更新成功");
         }
 
-        // POST: api/Teams
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
+        /// <summary>
+        /// 创建团队
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
         [HttpPost]
-        public ActionResult<Team> PostTeam(Team team)
+        public async Task<ActionResult<Team>> PostTeam(Team team)
         {
-            _teamService.Insert(team);
+            await _teamService.InsertAsync(team);
 
             return CreatedAtAction("GetTeam", new { id = team.Id }, team);
         }
 
-        // DELETE: api/Teams/5
-        [HttpDelete("{id}")]
-        public ActionResult<Team> DeleteTeam(Guid id)
+        /// <summary>
+        /// 删除团队
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("/Teams/{id}")]
+        public ActionResult<Team> DeleteTeam([FromRoute]Guid id)
         {
             var team = _teamService.Find(id);
             if (team == null)
@@ -126,7 +143,7 @@ namespace NC.MicroService.TeamService.Controllers
                 return NotFound();
             }
 
-            _teamService.Delete(id);
+            _teamService.Delete(team);
             return team;
         }
     }

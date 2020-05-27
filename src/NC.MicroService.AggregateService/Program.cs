@@ -37,8 +37,9 @@ namespace NC.MicroService.AggregateService
                         configBuilder
                             // --> 加载环境配置文件
                             .AddConsul(
-                                $"{env.ApplicationName}/appsettings.json", // --> 多服务单配置使用方式
-                                // $"{env.ApplicationName}/appsettings.{env.EnvironmentName}.json",
+                                // $"appsettings.json", // --> 单服务单配置，获取方式：Configuration["Leo-Test"]
+                                // $"{env.ApplicationName}/appsettings.json", // --> 多服务单配置使用方式
+                                $"{env.ApplicationName}/appsettings.{env.EnvironmentName}.json", // 多服务多配置使用方式
                                 options =>
                                 {
                                     // 设置 consul 地址
@@ -50,37 +51,37 @@ namespace NC.MicroService.AggregateService
                                     // 设置忽略异常
                                     options.OnLoadException = exContext => { exContext.Ignore = false; };
                                 }
+                            )
+                            // --> 加载自定义配置文件 
+                            .AddConsul(
+                                $"{env.ApplicationName}.custom.json",
+                                options =>
+                                {
+                                    // 设置 consul 地址
+                                    options.ConsulConfigurationOptions = ccOptions => { ccOptions.Address = new Uri(consulUrl); };
+                                    // 设置配置是否可选 --> 是否要加载的意思？？？
+                                    options.Optional = true;
+                                    // 设置配置文件更新后是否重新加载
+                                    options.ReloadOnChange = true;
+                                    // 设置忽略异常
+                                    options.OnLoadException = exContext => { exContext.Ignore = true; };
+                                }
+                            )
+                            // --> 加载通用配置文件
+                            .AddConsul(
+                                $"common.json",
+                                options =>
+                                {
+                                    // 设置 consul 地址
+                                    options.ConsulConfigurationOptions = ccOptions => { ccOptions.Address = new Uri(consulUrl); };
+                                    // 设置配置是否可选
+                                    options.Optional = true;
+                                    // 设置配置文件更新后是否重新加载
+                                    options.ReloadOnChange = true;
+                                    // 设置忽略异常
+                                    options.OnLoadException = exContext => { exContext.Ignore = true; };
+                                }
                             );
-                        //// --> 加载自定义配置文件 
-                        //.AddConsul(
-                        //    $"{env.ApplicationName}.custom.json",
-                        //    options =>
-                        //    {
-                        //        // 设置 consul 地址
-                        //        options.ConsulConfigurationOptions = ccOptions => { ccOptions.Address = new Uri(consulUrl); };
-                        //        // 设置配置是否可选 --> 是否要加载的意思？？？
-                        //        options.Optional = true;
-                        //        // 设置配置文件更新后是否重新加载
-                        //        options.ReloadOnChange = true;
-                        //        // 设置忽略异常
-                        //        options.OnLoadException = exContext => { exContext.Ignore = true; };
-                        //    }
-                        //)
-                        //// --> 加载通用配置文件
-                        //.AddConsul(
-                        //    $"common.json",
-                        //    options =>
-                        //    {
-                        //        // 设置 consul 地址
-                        //        options.ConsulConfigurationOptions = ccOptions => { ccOptions.Address = new Uri(consulUrl); };
-                        //        // 设置配置是否可选
-                        //        options.Optional = true;
-                        //        // 设置配置文件更新后是否重新加载
-                        //        options.ReloadOnChange = true;
-                        //        // 设置忽略异常
-                        //        options.OnLoadException = exContext => { exContext.Ignore = true; };
-                        //    }
-                        //);
                         // Consul 中加载的配置信息加载到 Configuration 对象，然后通过 Configuration 对象加载到项目中
                         hostingContext.Configuration = configBuilder.Build();
                     });

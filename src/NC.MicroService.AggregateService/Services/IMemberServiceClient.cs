@@ -16,5 +16,11 @@ namespace NC.MicroService.AggregateService.Services
         /// </summary>
         /// <returns></returns>
         Task<IList<Member>> GetMembersByTeamId(Guid teamId);
+
+        /// <summary>
+        /// 添加成员信息
+        /// </summary>
+        /// <param name="member"></param>
+        Task InsertAsync(Member member);
     }
 }

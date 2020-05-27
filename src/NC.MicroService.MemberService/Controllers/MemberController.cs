@@ -26,12 +26,12 @@ namespace NC.MicroService.MemberService.Controllers
         }
 
         /// <summary>
-        /// 查询所有成员信息
+        /// 根据团队ID查询所有成员信息
         /// </summary>
-        /// <param name="teamId">?teamId参数结尾方式</param>
+        /// <param name="teamId">团队ID</param>
         /// <returns></returns>
-        [HttpGet]
-        public ActionResult<IEnumerable<Member>> GetMembers(Guid teamId)
+        [HttpGet("/Members/{teamId}")]
+        public ActionResult<IEnumerable<Member>> GetMembers([FromRoute]Guid teamId)
         {
 
             #region 配置中心测试相关
@@ -63,10 +63,13 @@ namespace NC.MicroService.MemberService.Controllers
             }
         }
 
-
-        // GET: api/Members/5
-        [HttpGet("{id}")]
-        public ActionResult<Member> GetMember(Guid id)
+        /// <summary>
+        /// 根据ID查询成员信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet("/Members/Get/{id}")]
+        public ActionResult<Member> GetMember([FromRoute]Guid id)
         {
             var member = _memberService.Find(id);
 
@@ -78,11 +81,14 @@ namespace NC.MicroService.MemberService.Controllers
             return member;
         }
 
-        // PUT: api/Members/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPut("{id}")]
-        public IActionResult PutMember(Guid id, Member member)
+        /// <summary>
+        /// 更新成员信息
+        /// </summary>
+        /// <param name="id">成员ID</param>
+        /// <param name="member">成员信息</param>
+        /// <returns></returns>
+        [HttpPut("/Members/{id}")]
+        public IActionResult PutMember([FromRoute]Guid id, [FromBody]Member member)
         {
             if (id != member.Id)
             {
@@ -105,14 +111,17 @@ namespace NC.MicroService.MemberService.Controllers
                 }
             }
 
-            return NoContent();
+            return Ok("更新成功");
         }
 
-        // POST: api/Members
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see https://aka.ms/RazorPagesCRUD.
-        [HttpPost]
-        public ActionResult<Member> PostMember(Guid teamId, Member member)
+        /// <summary>
+        /// 创建成员信息
+        /// </summary>
+        /// <param name="teamId">团队ID</param>
+        /// <param name="member">成员信息</param>
+        /// <returns></returns>
+        [HttpPost("/Members/{teamId}")]
+        public ActionResult<Member> PostMember([FromRoute]Guid teamId, [FromBody]Member member)
         {
             member.TeamId = teamId;
             _memberService.Insert(member);
@@ -120,17 +129,20 @@ namespace NC.MicroService.MemberService.Controllers
             return CreatedAtAction("GetMember", new { id = member.Id }, member);
         }
 
-        // DELETE: api/Members/5
-        [HttpDelete("{id}")]
-        public ActionResult<Member> DeleteMember(Guid id)
+        /// <summary>
+        /// 删除成员
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("/Members/{id}")]
+        public ActionResult<Member> DeleteMember([FromRoute]Guid id)
         {
             var member = _memberService.Find(id);
             if (member == null)
             {
                 return NotFound();
             }
-            _memberService.Delete(id);
-
+            _memberService.Delete(member);
             return member;
         }
     }

@@ -74,5 +74,38 @@ namespace NC.MicroService.AggregateService.Controllers
 
             return Ok(teams);
         }
+
+
+        /// <summary>
+        /// 添加团队和成员信息，Saga事务测试
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        //[HttpPost, SagaStart]
+        [HttpPost]
+        public async Task<ActionResult> Post(string value)
+        {
+            Console.WriteLine("添加团队信息和成员信息...");
+
+            // 1. 添加团队信息
+            var team = new Team()
+            {
+                Id = Guid.NewGuid(),
+                TeamName = "研发团队",
+            };
+            await _teamServiceClient.InsertAsync(team);
+
+            // 2. 添加成员信息
+            var member = new Member()
+            {
+                Id = Guid.NewGuid(),
+                MemberName = "Leo",
+                NickName = "Leo-1",
+                TeamId = team.Id
+            };
+            await _memberServiceClient.InsertAsync(member);
+
+            return Ok("添加成功...");
+        }
     }
 }

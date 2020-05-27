@@ -78,5 +78,15 @@ namespace NC.MicroService.AggregateService.Services
             //}
             //return null;
         }
+
+        /// <summary>
+        /// 添加团队信息
+        /// </summary>
+        /// <param name="team"></param>
+        /// <returns></returns>
+        public async Task InsertAsync(Team team)
+        {
+            await _consulHttpClient.Post<Team>(_serviceScheme, _serviceName, _requirePath, team);
+        }
     }
 }

@@ -59,11 +59,11 @@ namespace NC.MicroService.IdentityClient.Controllers
 
                 // 2、使用token
                 // 直接访问teamservice
-                // var result = await client.GetStringAsync("https://192.168.2.105:5001/teams");
+                var result = await client.GetStringAsync("https://10.17.9.6:5001/teams");
                 // 集成ocelot网关
-                //var result = await client.GetStringAsync("https://192.168.2.105:5004/ocelot/teams");
+                //var result = await client.GetStringAsync("https://10.17.9.6:5004/ocelot/teams");
                 // 集成ocelot网关，配置动态路由后的请求方式，注意所有请求的第一层目录必须是对应着Consul中的服务名
-                var result = await client.GetStringAsync("https://192.168.2.105:5004/TeamService/teams"); // 最终会被转换为 https://192.168.2.105:5001/Teams
+                // var result = await client.GetStringAsync("https://10.17.9.6:5004/TeamService/teams"); // 最终会被转换为 https://10.17.9.6:5001/Teams
 
                 // 3、响应结果到页面
                 ViewData.Add("Json", result);
@@ -93,7 +93,7 @@ namespace NC.MicroService.IdentityClient.Controllers
 
 
             var client = _httpClientFactory.CreateClient("disableHttpsValidation");
-            string serverUrl = "https://192.168.2.105:5005";
+            string serverUrl = "https://10.17.9.6:5005";
             discovery = await client.GetDiscoveryDocumentAsync(serverUrl);
             if (discovery.IsError)
             {
@@ -127,7 +127,7 @@ namespace NC.MicroService.IdentityClient.Controllers
                 ClientId = "client-code",
                 ClientSecret = "secret",
                 Code = "12",
-                RedirectUri = "https://192.168.2.105:5005"
+                RedirectUri = "https://10.17.9.6:5005"
             });
 
 
@@ -164,9 +164,9 @@ namespace NC.MicroService.IdentityClient.Controllers
             var apiClient = _httpClientFactory.CreateClient("disableHttpsValidation");
             apiClient.SetBearerToken(AccessToken); // 1、设置token到请求头
             // 直接访问teamservice
-            //HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.105:5001/teams");
+            //HttpResponseMessage response = await apiClient.GetAsync("https://10.17.9.6:5001/teams");
             // 集成ocelot网关
-            HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.105:5004/ocelot/teams");
+            HttpResponseMessage response = await apiClient.GetAsync("https://10.17.9.6:5004/ocelot/teams");
 
             if (!response.IsSuccessStatusCode)
             {

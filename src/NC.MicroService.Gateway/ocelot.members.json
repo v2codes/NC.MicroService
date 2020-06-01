@@ -1,5 +1,6 @@
 //{
-//  "ReRoutes": [ // 单路由示例
+////  "ReRoutes": [ // 单路由示例
+//  "Routes": [ // update ocelot 16.0.1
 //    {
 //      "key": "members",
 

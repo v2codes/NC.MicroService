@@ -1,20 +1,23 @@
 {
-  "ReRoutes": [],
+  //"ReRoutes": [],
+  "Routes": [], // update ocelot 16.0.1
   "Aggregate": [],
-  "DynamicReRoutes": [
-    {
-      "ServiceName": "TeamService",
-      "RateLimitRule": {
-        "ClientWhitelist": [],
-        "EnableRateLimiting": true,
-        "Period": "1s",
-        "PeriodTimespan": 3000,
-        "Limit": 3
-      }
-    }
-  ],
+  //"DynamicReRoutes": [
+  //  {
+  //    "ServiceName": "TeamService",
+  //    "RateLimitRule": {
+  //      "ClientWhitelist": [],
+  //      "EnableRateLimiting": true,
+  //      "Period": "1s",
+  //      "PeriodTimespan": 3000,
+  //      "Limit": 3
+  //    }
+  //  }
+  //],
   "GlobalConfiguration": {
     "RequestIdKey": null,
+    // 上游请求http方法，可使用数组
+    "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
     // Consul 服务发现地址
     "ServiceDiscoveryProvider": {
       "Host": "LL2019",
@@ -52,7 +55,7 @@
     // 身份认证配置
     "AuthenticationOptions": {
       "AuthenticationProviderKey": "OcelotKey",
-      "AllowedScopes": [] // 允许客户端范围  "memberservice", "teamserver"
+      "AllowedScopes": [ "MemberService", "TeamService" ] // 允许客户端范围  "memberservice", "teamserver"
     },
 
     // 忽略SSL证书校验

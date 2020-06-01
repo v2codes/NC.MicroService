@@ -5,6 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="OcelotExtension\CustomOcelotMiddleware.cs" />
+    <Compile Remove="OcelotExtension\OcelotPipelineBuilderExtensions.cs" />
+    <Compile Remove="OcelotExtension\OcelotPipelineExtensions.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="ocelot.aggregate.json" />
     <Content Remove="ocelot.common.json" />
     <Content Remove="ocelot.global.json" />
@@ -15,12 +21,16 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Json" Version="2.2.0" />
-    <PackageReference Include="Ocelot" Version="15.0.6" />
-    <PackageReference Include="Ocelot.Provider.Consul" Version="15.0.6" />
-    <PackageReference Include="Ocelot.Provider.Polly" Version="15.0.6" />
+    <PackageReference Include="Ocelot" Version="16.0.1" />
+    <PackageReference Include="Ocelot.Provider.Consul" Version="16.0.1" />
+    <PackageReference Include="Ocelot.Provider.Polly" Version="16.0.1" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties ocelot_1json__JsonSchema="" properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="OcelotExtension\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 
 </Project>

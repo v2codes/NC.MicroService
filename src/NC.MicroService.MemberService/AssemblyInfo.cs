@@ -1,6 +1,6 @@
-﻿//using Servicecomb.Saga.Omega.Abstractions.Transaction;
+﻿using Servicecomb.Saga.Omega.Abstractions.Transaction;
 
 
-//[module: SagaStart]
-//[module: Compensable]
-//// IAspectMatchingRule-based decorators
+[module: SagaStart]
+[module: Compensable]
+// IAspectMatchingRule-based decorators

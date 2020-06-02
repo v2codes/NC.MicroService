@@ -17,6 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\NC.MicroService.EntityFrameworkCore\NC.MicroService.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\NC.MicroService.Infrastructure\NC.MicroService.Infrastructure.csproj" />
+    <ProjectReference Include="..\Omega\src\Servicecomb.Saga.Omega.AspNetCore\Servicecomb.Saga.Omega.AspNetCore.csproj" />
+    <ProjectReference Include="..\Omega\src\Servicecomb.Saga.Omega.Core\Servicecomb.Saga.Omega.Core.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="http://json.schemastore.org/appsettings" appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>

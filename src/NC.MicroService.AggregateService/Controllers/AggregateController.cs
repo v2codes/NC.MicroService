@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NC.MicroService.AggregateService.Domain;
 using NC.MicroService.AggregateService.Services;
+using Servicecomb.Saga.Omega.Abstractions.Transaction;
 
 namespace NC.MicroService.AggregateService.Controllers
 {
@@ -81,8 +82,8 @@ namespace NC.MicroService.AggregateService.Controllers
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        //[HttpPost, SagaStart]
-        [HttpPost]
+        //[HttpPost]
+        [HttpPost, SagaStart]
         public async Task<ActionResult> Post(string value)
         {
             Console.WriteLine("添加团队信息和成员信息...");

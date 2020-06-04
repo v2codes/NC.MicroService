@@ -121,10 +121,10 @@ namespace NC.MicroService.MemberService.Controllers
         /// <param name="member">成员信息</param>
         /// <returns></returns>
         [HttpPost("/Members/{teamId}")]
-        public ActionResult<Member> PostMember([FromRoute]Guid teamId, [FromBody]Member member)
+        public async Task<ActionResult<Member>> PostMember([FromRoute]Guid teamId, [FromBody]Member member)
         {
             member.TeamId = teamId;
-            _memberService.Insert(member);
+            await _memberService.InsertAsync(member);
 
             return CreatedAtAction("GetMember", new { id = member.Id }, member);
         }

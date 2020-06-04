@@ -21,13 +21,20 @@ namespace NC.MicroService.MemberService.Services
         }
 
         /// <summary>
-        /// saga事务参与者 Compensable撤销业务 逻辑
+        /// saga事务参与者 Compensable撤销业务 逻辑 --> 子事务
         /// </summary>
         /// <param name="team"></param>
-        [Compensable(nameof(Delete))]
+        [Compensable(nameof(CancelMemberInsert))]
         public override async Task<int> InsertAsync(Member entity)
         {
-            return await _repository.InsertAsync(entity);
+            var res = await _repository.InsertAsync(entity);
+            return res;
+        }
+
+        void CancelMemberInsert(Member entity)
+        {
+            Console.WriteLine("Rollback...");
+            base.Delete(entity);
         }
     }
 }

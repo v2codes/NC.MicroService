@@ -54,7 +54,7 @@ namespace NC.MicroService.MemberService
             // 7. 注册Saga分布式事务
             services.AddOmegaCore(options =>
             {
-                options.GrpcServerAddress = "LL2019:8080"; // 7.1 协调中心地址 alpha
+                options.GrpcServerAddress = "192.168.238.237:8080"; // 7.1 协调中心地址 alpha
                 options.InstanceId = "MemberService-ID"; // 7.2 服务实例ID -- 用于集群
                 options.ServiceName = "MemberService"; // 7.3 服务名称
             });

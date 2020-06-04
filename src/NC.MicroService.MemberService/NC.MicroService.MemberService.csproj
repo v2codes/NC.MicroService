@@ -5,21 +5,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MethodDecorator.Fody" Version="1.1.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.3" />
+    <PackageReference Include="Mono.Cecil" Version="0.11.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.1.1" />
     <PackageReference Include="Winton.Extensions.Configuration.Consul" Version="3.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\servicecomb-pack-csharp\src\Servicecomb.Saga.Omega.AspNetCore\Servicecomb.Saga.Omega.AspNetCore.csproj" />
+    <ProjectReference Include="..\..\..\servicecomb-pack-csharp\src\Servicecomb.Saga.Omega.Core\Servicecomb.Saga.Omega.Core.csproj" />
     <ProjectReference Include="..\NC.MicroService.EntityFrameworkCore\NC.MicroService.EntityFrameworkCore.csproj" />
     <ProjectReference Include="..\NC.MicroService.Infrastructure\NC.MicroService.Infrastructure.csproj" />
-    <ProjectReference Include="..\Omega\src\Servicecomb.Saga.Omega.AspNetCore\Servicecomb.Saga.Omega.AspNetCore.csproj" />
-    <ProjectReference Include="..\Omega\src\Servicecomb.Saga.Omega.Core\Servicecomb.Saga.Omega.Core.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="http://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>

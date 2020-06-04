@@ -17,6 +17,7 @@ using NC.MicroService.Infrastructure.Consul;
 using NC.MicroService.Infrastructure.Culster;
 using NC.MicroService.Infrastructure.Polly;
 using Polly;
+using Servicecomb.Saga.Omega.AspNetCore.Extensions;
 
 namespace NC.MicroService.AggregateService
 {
@@ -116,13 +117,13 @@ namespace NC.MicroService.AggregateService
 
             // 6. 校验AccessToken,从身份校验中心进行校验 --> 参加 TeamService
 
-            //// 7. 注册Saga分布式事务
-            //services.AddOmegaCore(options =>
-            //{
-            //    options.GrpcServerAddress = "LL2019:8080"; // 7.1 协调中心地址 alpha
-            //    options.InstanceId = "AggregateService-ID"; // 7.2 服务实例ID -- 用于集群
-            //    options.ServiceName = "AggregateService"; // 7.3 服务名称
-            //});
+            // 7. 注册Saga分布式事务
+            services.AddOmegaCore(options =>
+            {
+                options.GrpcServerAddress = "192.168.238.237:8080"; // 7.1 协调中心地址 alpha
+                options.InstanceId = "AggregateService-ID"; // 7.2 服务实例ID -- 用于集群
+                options.ServiceName = "AggregateService"; // 7.3 服务名称
+            });
 
             services.AddControllers();
         }

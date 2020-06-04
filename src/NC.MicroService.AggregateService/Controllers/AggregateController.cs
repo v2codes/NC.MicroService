@@ -87,6 +87,8 @@ namespace NC.MicroService.AggregateService.Controllers
         public async Task<ActionResult> Post(string value)
         {
             Console.WriteLine("添加团队信息和成员信息...");
+            // throw new a exception for test
+            throw new Exception("异常测试 --> 事务入口", new Exception());
 
             // 1. 添加团队信息
             var team = new Team()

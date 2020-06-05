@@ -13,9 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\servicecomb-pack-csharp\src\Servicecomb.Saga.Omega.AspNetCore\Servicecomb.Saga.Omega.AspNetCore.csproj" />
-    <ProjectReference Include="..\..\..\servicecomb-pack-csharp\src\Servicecomb.Saga.Omega.Core\Servicecomb.Saga.Omega.Core.csproj" />
     <ProjectReference Include="..\NC.MicroService.Infrastructure\NC.MicroService.Infrastructure.csproj" />
+    <ProjectReference Include="..\Omega\src\Servicecomb.Saga.Omega.AspNetCore\Servicecomb.Saga.Omega.AspNetCore.csproj" />
+    <ProjectReference Include="..\Omega\src\Servicecomb.Saga.Omega.Core\Servicecomb.Saga.Omega.Core.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1development_1json__JsonSchema="http://json.schemastore.org/appsettings" /></VisualStudio></ProjectExtensions>

@@ -6,18 +6,17 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NC.MicroService.Infrastructure.Consul;
-using NC.MicroService.MemberService.EntityFrameworkCore;
-using NC.MicroService.MemberService.Repositories;
-using NC.MicroService.MemberService.Services;
-using Servicecomb.Saga.Omega.AspNetCore.Extensions;
+using NC.MicroService.VideoService.Services;
+using NC.MicroService.VideoService.Repositories;
+using NC.MicroService.VideoService.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
-namespace NC.MicroService.MemberService
+namespace NC.MicroService.VideoService
 {
     public class Startup
     {
@@ -31,33 +30,42 @@ namespace NC.MicroService.MemberService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             // 1. 注册数据库上下文
             services.AddDbContext<CoreContext>(options =>
             {
                 options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));// AiConnection DefaultConnection
             });
 
-            // 2. 注册成员Service
-            services.AddScoped<IMemberService, Services.MemberService>();
+            // 2. 注册团队service
+            services.AddScoped<IVideoService, Services.VideoService>();
 
-            // 3. 注册成员仓储
-            services.AddScoped<IMemberRepository, MemberRepository>();
+            // 3. 注册团队仓储
+            services.AddScoped<IVideoRepository, VideoRepository>();
 
-            // 4. 添加映射
-            //services.AddAutoMapper();
+            // 4. 注册映射
+            // services.AddAutoMapper();
 
-            // 5. 添加服务注册条件
+            // 5. 注册Consul注册服务
             services.AddConsulRegistry(Configuration);
 
-            // 6. 校验AccessToken,从身份校验中心进行校验 --> 参加 TeamService
+            //// 6.校验AccessToken,从身份校验中心进行校验-- > Ocelot 网关集成授权认证
+            //services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+            //        .AddIdentityServerAuthentication(options =>
+            //        {
+            //            options.Authority = "https://192.168.2.105:5005"; // 1. 授权中心地址
+            //            options.ApiName = "VideoService"; // 2. api名称(项目具体名称)
+            //            options.RequireHttpsMetadata = true; // 3. https元数据，不需要
+            //            options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
+            //        });
 
-            // 7. 注册Saga分布式事务
-            services.AddOmegaCore(options =>
-            {
-                options.GrpcServerAddress = "192.168.75.148:8080"; // 7.1 协调中心地址 alpha
-                options.InstanceId = "MemberService-ID"; // 7.2 服务实例ID -- 用于集群
-                options.ServiceName = "MemberService"; // 7.3 服务名称
-            });
+            //// 7. 注册Saga分布式事务
+            //services.AddOmegaCore(options =>
+            //{
+            //    options.GrpcServerAddress = "192.168.75.148:8080"; // 7.1 协调中心地址
+            //    options.InstanceId = "VideoService-ID"; // 7.2 服务实例ID -- 用于集群
+            //    options.ServiceName = "VideoService"; // 7.3 服务名称
+            //});
 
             services.AddControllers();
         }
@@ -73,10 +81,12 @@ namespace NC.MicroService.MemberService
             // 1. Consul服务注册
             app.UseConsulRegistry();
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
 
+            // 1. 开启身份验证 --> Ocelot 网关集成授权认证
+            //app.UseAuthentication();
+
+            // 2. 使用授权
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

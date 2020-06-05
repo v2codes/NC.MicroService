@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicecomb.Saga.Omega.Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Servicecomb.Saga.Omega.Protocol", "Omega\src\Servicecomb.Saga.Omega.Protocol\Servicecomb.Saga.Omega.Protocol.csproj", "{8873D878-F7F8-40D9-9453-8A218FCFD544}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NC.MicroService.VideoService", "NC.MicroService.VideoService\NC.MicroService.VideoService.csproj", "{83807716-F9EA-4808-A9B2-DE6A89EC8E7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{8873D878-F7F8-40D9-9453-8A218FCFD544}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8873D878-F7F8-40D9-9453-8A218FCFD544}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8873D878-F7F8-40D9-9453-8A218FCFD544}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83807716-F9EA-4808-A9B2-DE6A89EC8E7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83807716-F9EA-4808-A9B2-DE6A89EC8E7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83807716-F9EA-4808-A9B2-DE6A89EC8E7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83807716-F9EA-4808-A9B2-DE6A89EC8E7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{94519273-E636-4DCC-BC2B-563FC9131853} = {70B829FE-990A-4639-A227-87AA8986F3FB}
 		{654187FA-6C5E-4C0F-B1C5-D833CF108875} = {70B829FE-990A-4639-A227-87AA8986F3FB}
 		{8873D878-F7F8-40D9-9453-8A218FCFD544} = {70B829FE-990A-4639-A227-87AA8986F3FB}
+		{83807716-F9EA-4808-A9B2-DE6A89EC8E7F} = {634E47BA-8440-4E01-9898-8E55F17937AC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {44774889-98AB-4174-BE3A-75A6AA229337}

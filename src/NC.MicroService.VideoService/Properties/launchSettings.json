@@ -4,8 +4,8 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:55523",
-      "sslPort": 44363
+      "applicationUrl": "http://localhost:55872",
+      "sslPort": 44394
     }
   },
   "profiles": {
@@ -17,11 +17,11 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "NC.MicroService.AggregateService": {
+    "NC.MicroService.VideoService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/teams",
-      "applicationUrl": "https://0.0.0.0:5003",
+      "launchUrl": "weatherforecast",
+      "applicationUrl": "https://0.0.0.0:5007",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

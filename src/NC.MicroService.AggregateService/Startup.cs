@@ -120,7 +120,7 @@ namespace NC.MicroService.AggregateService
             // 7. 注册Saga分布式事务
             services.AddOmegaCore(options =>
             {
-                options.GrpcServerAddress = "192.168.238.237:8080"; // 7.1 协调中心地址 alpha
+                options.GrpcServerAddress = "192.168.75.148:8080"; // 7.1 协调中心地址 alpha
                 options.InstanceId = "AggregateService-ID"; // 7.2 服务实例ID -- 用于集群
                 options.ServiceName = "AggregateService"; // 7.3 服务名称
             });

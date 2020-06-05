@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -21,13 +22,18 @@ namespace NC.MicroService.AggregateService.Controllers
 
         private readonly IConfiguration _configuration;
 
+        // CAP 发布者
+        private readonly ICapPublisher _capPublisher;
+
         public AggregateController(ITeamServiceClient teamServiceClient,
                                    IMemberServiceClient memberServicesClient,
-                                   IConfiguration configuration) // 演示查看配置中心是否正常 
+                                   IConfiguration configuration, // 演示查看配置中心是否正常
+                                   ICapPublisher capPublisher)  
         {
             this._teamServiceClient = teamServiceClient;
             this._memberServiceClient = memberServicesClient;
             this._configuration = configuration;
+            this._capPublisher = capPublisher;
         }
 
         // GET: /Teams
@@ -87,26 +93,40 @@ namespace NC.MicroService.AggregateService.Controllers
         public async Task<ActionResult> Post(string value)
         {
             Console.WriteLine("添加团队信息和成员信息...");
+            // TODO ....omega 在事务异常时出错，并未进行补偿操作！！！！！！！！！！
             // throw new a exception for test
-            throw new Exception("异常测试 --> 事务入口", new Exception());
+            //throw new Exception("异常测试 --> 事务入口", new Exception());
 
-            // 1. 添加团队信息
-            var team = new Team()
+            //// 1. 添加团队信息
+            //var team = new Team()
+            //{
+            //    Id = Guid.NewGuid(),
+            //    TeamName = "研发团队",
+            //};
+            //await _teamServiceClient.InsertAsync(team);
+
+            //// 2. 添加成员信息
+            //var member = new Member()
+            //{
+            //    Id = Guid.NewGuid(),
+            //    MemberName = "Leo",
+            //    NickName = "Leo-1",
+            //    TeamId = team.Id
+            //};
+            //await _memberServiceClient.InsertAsync(member);
+
+            // 出现了异常
+            // Thread.Sleep(10000);
+
+
+            // CAP 示例代码
+            var video = new VideoDto()
             {
                 Id = Guid.NewGuid(),
-                TeamName = "研发团队",
+                VideoUrl = $"http://localhost/xxxxx.mp4",
+                MemberId = Guid.NewGuid()
             };
-            await _teamServiceClient.InsertAsync(team);
-
-            // 2. 添加成员信息
-            var member = new Member()
-            {
-                Id = Guid.NewGuid(),
-                MemberName = "Leo",
-                NickName = "Leo-1",
-                TeamId = team.Id
-            };
-            await _memberServiceClient.InsertAsync(member);
+            await _capPublisher.PublishAsync("videoCreateEvent", video);
 
             return Ok("添加成功...");
         }

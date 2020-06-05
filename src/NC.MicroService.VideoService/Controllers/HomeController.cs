@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotNetCore.CAP;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -73,8 +74,25 @@ namespace NC.MicroService.VideoService.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// 视频添加
+        /// </summary>
+        /// <param name="Video"></param>
+        /// <returns></returns>
+        [NonAction]
+        [CapSubscribe("videoCreateEvent")] // 事件消息名 
+        public ActionResult<Video> PostVideo([FromBody] Video Video)
+        {
+            // 1、阻塞30
+            // Thread.Sleep(30000);// 不会影响客户端响应速度，video数据保存会延迟
+            // throw new Exception("出现异常");
+            Console.WriteLine($"接受到视频事件消息");
+            _videoService.Insert(Video);
+            return CreatedAtAction("GetVideo", new { id = Video.Id }, Video);
+        }
+
         ///// <summary>
-        ///// 视频添加
+        ///// 视频添加（基于CAP的异步添加）
         ///// </summary>
         ///// <param name="Video"></param>
         ///// <returns></returns>
@@ -84,7 +102,7 @@ namespace NC.MicroService.VideoService.Controllers
         ///// # 一对一匹配
         //[NonAction]
         //[CapSubscribe("video.*")]
-        //public ActionResult<Video> PostVideo([FromBody]Video Video)
+        //public ActionResult<Video> PostVideo([FromBody] Video Video)
         //{
         //    // 1、阻塞30
         //    // Thread.Sleep(30000);

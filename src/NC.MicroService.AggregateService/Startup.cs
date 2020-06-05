@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NC.MicroService.AggregateService.EntityFrameworkCore;
 using NC.MicroService.AggregateService.Services;
 using NC.MicroService.Infrastructure.Consul;
 using NC.MicroService.Infrastructure.Culster;
@@ -123,6 +125,35 @@ namespace NC.MicroService.AggregateService
                 options.GrpcServerAddress = "192.168.75.148:8080"; // 7.1 协调中心地址 alpha
                 options.InstanceId = "AggregateService-ID"; // 7.2 服务实例ID -- 用于集群
                 options.ServiceName = "AggregateService"; // 7.3 服务名称
+            });
+
+            // 8. 添加事件总线 CAP
+            services.AddCap(options =>
+            {
+                // 8.1 使用内存存储消息（消息发送失败处理）
+                // options.UseInMemoryStorage();
+                // 使用EntityFramework进行存储操作
+                options.UseEntityFramework<CoreContext>();
+                // 使用MySql进行事务处理
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));
+
+                // 8.2 使用RabbitMQ进行事件中心处理
+                options.UseRabbitMQ(options =>
+                {
+                    options.HostName = "LL2019";
+                    options.UserName = "mq";
+                    options.Password = "123456";
+                    options.Port = 5672;
+                    options.VirtualHost = "/";
+                });
+                // 8.3 添加CAP后台监控页面（人工处理）
+                options.UseDashboard();
+            });
+
+            // 9. 注册数据库上下文
+            services.AddDbContext<CoreContext>(options =>
+            {
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));// AiConnection DefaultConnection
             });
 
             services.AddControllers();

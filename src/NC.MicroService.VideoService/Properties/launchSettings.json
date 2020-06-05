@@ -20,7 +20,7 @@
     "NC.MicroService.VideoService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "/Video",
       "applicationUrl": "https://0.0.0.0:5007",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

@@ -67,6 +67,34 @@ namespace NC.MicroService.VideoService
             //    options.ServiceName = "VideoService"; // 7.3 服务名称
             //});
 
+            // 8. 添加事件总线 CAP
+            services.AddCap(options =>
+            {
+                // 8.1 使用内存存储消息（消息发送失败处理）
+                //options.UseInMemoryStorage();
+                // 使用EntityFramework进行存储操作
+                options.UseEntityFramework<CoreContext>();
+                // 使用MySql进行事务处理
+                options.UseMySql(Configuration.GetConnectionString("DefaultConnection"));// AiConnection DefaultConnection
+
+                // 8.2 使用RabbitMQ进行事件中心处理
+                options.UseRabbitMQ(options =>
+                {
+                    options.HostName = "LL2019";
+                    options.UserName = "mq";
+                    options.Password = "123456";
+                    options.Port = 5672;
+                    options.VirtualHost = "/";
+                });
+
+                // 8.3 配置定时器尽早启动
+                // options.FailedRetryInterval = 2;
+                options.FailedRetryCount = 5; // 3次失败 3分钟
+
+                // 8.4 添加CAP后台监控页面（人工处理）
+                options.UseDashboard();
+            });
+
             services.AddControllers();
         }
 

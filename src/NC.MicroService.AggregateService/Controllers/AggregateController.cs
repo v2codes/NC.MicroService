@@ -115,10 +115,8 @@ namespace NC.MicroService.AggregateService.Controllers
             //};
             //await _memberServiceClient.InsertAsync(member);
 
-            // 出现了异常
+            // 出现了异常，演示执行业务成功，发送消息前宕机
             // Thread.Sleep(10000);
-
-
             // CAP 示例代码
             var video = new VideoDto()
             {

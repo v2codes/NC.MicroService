@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Example.Library.CustomEventBus
+{
+    /// <summary>
+    /// 事件处理接口
+    /// </summary>
+    /// <typeparam name="TEvent">继承IEvent对象的事件源对象</typeparam>
+    public interface IEventHandler<TEvent> where TEvent : IEvent
+    {
+        /// <summary>
+        /// 事件处理程序
+        /// </summary>
+        /// <param name=""></param>
+        void Handle(TEvent @event);
+    }
+}

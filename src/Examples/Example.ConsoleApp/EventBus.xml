@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Events>
+  <Event>
+    <PublishEvent>Example.Library.CustomEventBus.Team</PublishEvent>
+    <SubscribedEvents>
+      <SubscribedEvent>Example.Library.CustomEventBus.TeamCreateEventHandler</SubscribedEvent>
+    </SubscribedEvents>
+  </Event>
+  <!--<Event>
+    <PublishEvent>Example.Library.CustomEventBus.Team</PublishEvent>
+    <SubscribedEvents>
+      <SubscribedEvent>ConsoleApplication2.code.EventHandlers.OrderDeletedEventHandler_NotifyClient</SubscribedEvent>
+    </SubscribedEvents>
+  </Event>-->
+</Events>

@@ -53,7 +53,7 @@ namespace NC.MicroService.VideoService
             //services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
             //        .AddIdentityServerAuthentication(options =>
             //        {
-            //            options.Authority = "https://192.168.2.105:5005"; // 1. 授权中心地址
+            //            options.Authority = "https://192.168.2.107:5005"; // 1. 授权中心地址
             //            options.ApiName = "VideoService"; // 2. api名称(项目具体名称)
             //            options.RequireHttpsMetadata = true; // 3. https元数据，不需要
             //            options.JwtBackChannelHandler = GetHandler(); // 4. 自定义 HttpClientHandler 
@@ -62,7 +62,7 @@ namespace NC.MicroService.VideoService
             //// 7. 注册Saga分布式事务
             //services.AddOmegaCore(options =>
             //{
-            //    options.GrpcServerAddress = "192.168.75.148:8080"; // 7.1 协调中心地址
+            //    options.GrpcServerAddress = "192.168.223.181:8080"; // 7.1 协调中心地址
             //    options.InstanceId = "VideoService-ID"; // 7.2 服务实例ID -- 用于集群
             //    options.ServiceName = "VideoService"; // 7.3 服务名称
             //});

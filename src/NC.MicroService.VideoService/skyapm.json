@@ -1,0 +1,11 @@
+{
+  // aspnetcore 客户端 -->  SkyWalking Core --> Collecter(ES)
+  "SkyWalking": {
+    "ServiceName": "VideoService", // 链路服务名
+    "Transport": {
+      "gRPC": {
+        "Servers": "ll2019:11800" // 接收日志数据地址
+      }
+    }
+  }
+}

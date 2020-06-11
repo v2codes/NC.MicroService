@@ -79,9 +79,9 @@ namespace NC.MicroService.IdentityServer4
                     RequireConsent=false,
                     RequirePkce=true,
 
-                    RedirectUris={ "https://192.168.2.105:5006/signin-oidc"}, // 1、客户端地址
+                    RedirectUris={ "https://192.168.2.107:5006/signin-oidc"}, // 1、客户端地址
 
-                    PostLogoutRedirectUris={ "https://192.168.2.105:5006/signout-callback-oidc"},// 2、登录退出地址
+                    PostLogoutRedirectUris={ "https://192.168.2.107:5006/signout-callback-oidc"},// 2、登录退出地址
 
                     AllowedScopes=new List<string>{
                         IdentityServerConstants.StandardScopes.OpenId, // 必须

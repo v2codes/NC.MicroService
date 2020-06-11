@@ -46,49 +46,49 @@ namespace NC.MicroService.IdentityClient.Controllers
 
             #region openid connect 协议
             {
-                //// 1、获取token(id-token , access_token ,refresh_token)
-                //var accessToken = await HttpContext.GetTokenAsync("access_token"); // 以及 id_token
-                //Console.WriteLine($"accessToken:{accessToken}");
-                //var refreshToken = await HttpContext.GetTokenAsync("refresh_token");
-                //Console.WriteLine($"refresh_token:{refreshToken}");
-                
-                //var client = _httpClientFactory.CreateClient("disableHttpsValidation");
+                // 1、获取token(id-token , access_token ,refresh_token)
+                var accessToken = await HttpContext.GetTokenAsync("access_token"); // 以及 id_token
+                Console.WriteLine($"accessToken:{accessToken}");
+                var refreshToken = await HttpContext.GetTokenAsync("refresh_token");
+                Console.WriteLine($"refresh_token:{refreshToken}");
 
-                //// 这两种方式都可以，设置请求头accesstoken
-                //client.SetBearerToken(accessToken);
-                ////client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+                var client = _httpClientFactory.CreateClient("disableHttpsValidation");
 
-                //// 2、使用token
-                //// 直接访问teamservice
-                //// var result = await client.GetStringAsync("https://192.168.2.105:5001/teams");
-                //// 集成ocelot网关
-                ////var result = await client.GetStringAsync("https://192.168.2.105:5004/ocelot/teams");
-                //// 集成ocelot网关，配置动态路由后的请求方式，注意所有请求的第一层目录必须是对应着Consul中的服务名
-                //var result = await client.GetStringAsync("https://192.168.2.105:5004/TeamService/teams"); // 最终会被转换为 https://192.168.2.105:5001/Teams
+                // 这两种方式都可以，设置请求头accesstoken
+                client.SetBearerToken(accessToken);
+                //client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-                //// 3、响应结果到页面
-                //ViewData.Add("Json", result);
+                // 2、使用token
+                // 直接访问teamservice
+                // var result = await client.GetStringAsync("https://192.168.2.107:5001/teams");
+                // 集成ocelot网关
+                //var result = await client.GetStringAsync("https://192.168.2.107:5004/ocelot/teams");
+                // 集成ocelot网关，配置动态路由后的请求方式，注意所有请求的第一层目录必须是对应着Consul中的服务名
+                var result = await client.GetStringAsync("https://192.168.2.107:5004/TeamService/teams"); // 最终会被转换为 https://192.168.2.107:5001/Teams
+
+                // 3、响应结果到页面
+                ViewData.Add("Json", result);
             }
             #endregion
 
             #region 添加团队成员信息
             {
-                // 1、获取token(id_token , access_token ,refresh_token)
-                var accessToken = await HttpContext.GetTokenAsync("access_token"); // ("id_token")
-                Console.WriteLine($"accessToken:{accessToken}");
-                // var refreshToken =await HttpContext.GetTokenAsync("refresh_token");
-                var client = new HttpClient();
-                client.SetBearerToken(accessToken);
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xhtml+xml"));
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml", 0.9));
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 0.9));
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/webp"));
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*", 0.8));
-                var result = await client.PostAsync("https://localhost:5004/AggregateService/api/teams", null);// ==== https://localhost:5001/teams
+                //// 1、获取token(id_token , access_token ,refresh_token)
+                //var accessToken = await HttpContext.GetTokenAsync("access_token"); // ("id_token")
+                //Console.WriteLine($"accessToken:{accessToken}");
+                //// var refreshToken =await HttpContext.GetTokenAsync("refresh_token");
+                //var client = new HttpClient();
+                //client.SetBearerToken(accessToken);
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("text/html"));
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xhtml+xml"));
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml", 0.9));
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json", 0.9));
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("image/webp"));
+                //client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("*/*", 0.8));
+                //var result = await client.PostAsync("https://localhost:5004/AggregateService/api/teams", null);// ==== https://localhost:5001/teams
 
-                // 3、响应结果到页面
-                ViewData.Add("Json", await result.Content.ReadAsStringAsync());
+                //// 3、响应结果到页面
+                //ViewData.Add("Json", await result.Content.ReadAsStringAsync());
             }
             #endregion
 
@@ -115,7 +115,7 @@ namespace NC.MicroService.IdentityClient.Controllers
 
 
             var client = _httpClientFactory.CreateClient("disableHttpsValidation");
-            string serverUrl = "https://192.168.2.105:5005";
+            string serverUrl = "https://192.168.2.107:5005";
             discovery = await client.GetDiscoveryDocumentAsync(serverUrl);
             if (discovery.IsError)
             {
@@ -149,7 +149,7 @@ namespace NC.MicroService.IdentityClient.Controllers
                 ClientId = "client-code",
                 ClientSecret = "secret",
                 Code = "12",
-                RedirectUri = "https://192.168.2.105:5005"
+                RedirectUri = "https://192.168.2.107:5005"
             });
 
 
@@ -186,9 +186,9 @@ namespace NC.MicroService.IdentityClient.Controllers
             var apiClient = _httpClientFactory.CreateClient("disableHttpsValidation");
             apiClient.SetBearerToken(AccessToken); // 1、设置token到请求头
             // 直接访问teamservice
-            //HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.105:5001/teams");
+            //HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.107:5001/teams");
             // 集成ocelot网关
-            HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.105:5004/ocelot/teams");
+            HttpResponseMessage response = await apiClient.GetAsync("https://192.168.2.107:5004/ocelot/teams");
 
             if (!response.IsSuccessStatusCode)
             {

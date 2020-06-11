@@ -38,7 +38,7 @@ namespace NC.MicroService.IdentityClient
                     .AddOpenIdConnect("oidc", options =>
                     {
                         // 1. 生成id_token
-                        options.Authority = "https://192.168.2.105:5005";    // 受信任令牌服务地址，授权地址
+                        options.Authority = "https://192.168.2.107:5005";    // 受信任令牌服务地址，授权地址
                         options.ClientId = "client-code";
                         options.ClientSecret = "secret";
                         options.ResponseType = "code";

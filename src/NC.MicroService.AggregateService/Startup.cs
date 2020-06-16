@@ -19,6 +19,7 @@ using NC.MicroService.Infrastructure.Consul;
 using NC.MicroService.Infrastructure.Culster;
 using NC.MicroService.Infrastructure.Polly;
 using Polly;
+using Serilog;
 using Servicecomb.Saga.Omega.AspNetCore.Extensions;
 
 namespace NC.MicroService.AggregateService
@@ -122,7 +123,7 @@ namespace NC.MicroService.AggregateService
             // 7. 注册Saga分布式事务
             services.AddOmegaCore(options =>
             {
-                options.GrpcServerAddress = "192.168.75.148:8080"; // 7.1 协调中心地址 alpha
+                options.GrpcServerAddress = "192.168.91.41:8080"; // 7.1 协调中心地址 alpha
                 options.InstanceId = "AggregateService-ID"; // 7.2 服务实例ID -- 用于集群
                 options.ServiceName = "AggregateService"; // 7.3 服务名称
             });
@@ -169,6 +170,9 @@ namespace NC.MicroService.AggregateService
 
             // 1. Consul服务注册
             app.UseConsulRegistry();
+
+            // 2. 启用日志Seri + ELK
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 

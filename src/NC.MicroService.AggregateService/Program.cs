@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
+using Serilog.Formatting.Json;
+using Serilog.Sinks.Elasticsearch;
+using Serilog.Sinks.File;
 using Winton.Extensions.Configuration.Consul;
 
 namespace NC.MicroService.AggregateService
@@ -86,7 +90,31 @@ namespace NC.MicroService.AggregateService
                         hostingContext.Configuration = configBuilder.Build();
                     });
 
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>().UseSerilog();
+                })
+                // 启用日志中心 Serilog + ELK
+                .UseSerilog((context, config) =>
+                {
+                    // 配置文件使用方式
+                    config.ReadFrom.Configuration(context.Configuration);
+                    //硬编码使用方式，，，
+                    //config.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://ll2019:9200"))
+                    //{
+                    //    TypeName="microservice-log",
+                    //    AutoRegisterTemplate = true,
+                    //    OverwriteTemplate = true,
+                    //    DetectElasticsearchVersion = true,
+                    //    AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.ESv6,
+                    //    NumberOfReplicas = 1,
+                    //    NumberOfShards = 2,
+                    //    //BufferBaseFilename = "./buffer",
+                    //    RegisterTemplateFailure = RegisterTemplateRecovery.FailSink,
+                    //    FailureCallback = e => Console.WriteLine("Unable to submit event " + e.MessageTemplate),
+                    //    EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog |
+                    //                   EmitEventFailureHandling.WriteToFailureSink |
+                    //                   EmitEventFailureHandling.RaiseCallback,
+                    //    FailureSink = new FileSink($"serilog-fail-{DateTime.Now.Date:yyyyMMdd}.txt", new JsonFormatter(), null, null)
+                    //});
                 });
     }
 }

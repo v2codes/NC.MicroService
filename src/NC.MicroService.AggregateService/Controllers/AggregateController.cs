@@ -25,15 +25,20 @@ namespace NC.MicroService.AggregateService.Controllers
         // CAP 发布者
         private readonly ICapPublisher _capPublisher;
 
+        // ILogger
+        private readonly ILogger _logger;
+
         public AggregateController(ITeamServiceClient teamServiceClient,
                                    IMemberServiceClient memberServicesClient,
                                    IConfiguration configuration, // 演示查看配置中心是否正常
-                                   ICapPublisher capPublisher)  
+                                   ICapPublisher capPublisher,
+                                   ILogger<AggregateController> logger) // 日志中心
         {
             this._teamServiceClient = teamServiceClient;
             this._memberServiceClient = memberServicesClient;
             this._configuration = configuration;
             this._capPublisher = capPublisher;
+            this._logger = logger;
         }
 
         // GET: /Teams
@@ -41,7 +46,8 @@ namespace NC.MicroService.AggregateService.Controllers
         public async Task<ActionResult<List<Team>>> Get()
         {
             Console.WriteLine($"查询团队成员消息");
-
+            _logger.LogDebug("查询团队成员消息");
+            _logger.LogError("出错啦！！！");
             #region 配置中心测试相关
             //// 1. 配置获取
             //Console.WriteLine($"配置中心配置项：Leo-Test={_configuration["Leo-Test"]}");

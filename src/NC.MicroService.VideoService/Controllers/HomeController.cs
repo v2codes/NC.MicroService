@@ -98,8 +98,9 @@ namespace NC.MicroService.VideoService.Controllers
         ///// <returns></returns>
         ///// video.event video.event  video.event.1
         ///// video.event video.1 video.1
-        ///// *  一对多匹配
-        ///// # 一对一匹配
+        ///// *  一对多匹配 --> 描述不对！！！
+        ///// # 一对一匹配 --> 描述不对！！！
+        ///// ==> “#”匹配一个或多个词，符号“*”匹配一个词。因此“audit.#”能够匹配到“audit.irs.corporate”，但是“audit.*” 只会匹配到“audit.irs”。
         //[NonAction]
         //[CapSubscribe("video.*")]
         //public ActionResult<Video> PostVideo([FromBody] Video Video)

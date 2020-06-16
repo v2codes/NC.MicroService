@@ -88,11 +88,13 @@ namespace NC.MicroService.VideoService
                 });
 
                 // 8.3 配置定时器尽早启动
-                // options.FailedRetryInterval = 2;
-                options.FailedRetryCount = 5; // 3次失败 3分钟
+                // 消费失败重试时间间隔（秒），不建议设置该时间
+                // 采用CAP默认逻辑即可，比如重试次数设为5次时，CAP首先会间隔60秒重试3次，依然失败时会执行长时间休眠（3分钟？）之后再进行重试。
+                // options.FailedRetryInterval = 2;  
+                options.FailedRetryCount = 5; // 超过5次消费失败时，只能进行人工干预，内部不会再处理该消息。
 
                 // 8.4 添加CAP后台监控页面（人工处理）
-                options.UseDashboard();
+                options.UseDashboard(); // CAP 后台管理界面（路由地址：/cap）
             });
 
             services.AddControllers();

@@ -98,7 +98,7 @@ namespace NC.MicroService.AggregateService
                     // 配置文件使用方式
                     config.ReadFrom.Configuration(context.Configuration);
                     //硬编码使用方式，，，
-                    //config.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://ll2019:9200"))
+                    //config.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://172.17.225.138:9200"))
                     //{
                     //    TypeName="microservice-log",
                     //    AutoRegisterTemplate = true,

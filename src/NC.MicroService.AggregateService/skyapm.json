@@ -4,7 +4,7 @@
     "ServiceName": "AggregateService", // 链路服务名
     "Transport": {
       "gRPC": {
-        "Servers": "ll2019:11800" // 接收日志数据地址
+        "Servers": "172.17.225.138:11800" // 接收日志数据地址
       }
     }
   }

@@ -20,7 +20,7 @@
     "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
     // Consul 服务发现地址
     "ServiceDiscoveryProvider": {
-      "Host": "LL2019",
+      "Host": "172.17.225.138",
       "Port": 8500,
       "Type": "Consul"
     },

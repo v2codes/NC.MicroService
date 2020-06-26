@@ -80,7 +80,7 @@ namespace NC.MicroService.VideoService
                 // 8.2 使用RabbitMQ进行事件中心处理
                 options.UseRabbitMQ(options =>
                 {
-                    options.HostName = "LL2019";
+                    options.HostName = "172.17.225.138";
                     options.UserName = "mq";
                     options.Password = "123456";
                     options.Port = 5672;
